@@ -23,6 +23,7 @@ class LTSProcessBuilder extends ProcessBuilder
 {
     private $arguments;
     private $prefix;
+    private $timeout;
 
     public function __construct(array $arguments = array())
     {
@@ -44,6 +45,13 @@ class LTSProcessBuilder extends ProcessBuilder
         return $this;
     }
 
+    public function setTimeout($timeout)
+    {
+        $this->timeout = $timeout;
+
+        return $this;
+    }
+
     public function getProcess()
     {
         if (!$this->prefix && !count($this->arguments)) {
@@ -53,6 +61,6 @@ class LTSProcessBuilder extends ProcessBuilder
         $args = $this->prefix ? array_merge(array($this->prefix), $this->arguments) : $this->arguments;
         $script = implode(' ', array_map('escapeshellarg', $args));
 
-        return new Process($script);
+        return new Process($script, null, null, null, $this->timeout);
     }
 }

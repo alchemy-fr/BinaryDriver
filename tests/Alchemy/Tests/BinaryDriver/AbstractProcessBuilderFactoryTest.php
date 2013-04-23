@@ -84,4 +84,14 @@ abstract class AbstractProcessBuilderFactoryTest extends \PHPUnit_Framework_Test
         $this->assertInstanceOf('Symfony\Component\Process\Process', $process);
         $this->assertEquals("'".static::$phpBinary."' '-r' 'echo \"Hello !\";'", $process->getCommandLine());
     }
+
+    public function testCreateWithTimeout()
+    {
+        $factory = $this->getProcessBuilderFactory(static::$phpBinary);
+        $factory->setTimeout(200);
+        $process = $factory->create(array('-i'));
+
+        $this->assertInstanceOf('Symfony\Component\Process\Process', $process);
+        $this->assertEquals(200, $process->getTimeout());
+    }
 }

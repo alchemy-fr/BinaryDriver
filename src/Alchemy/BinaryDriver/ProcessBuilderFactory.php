@@ -24,6 +24,13 @@ class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
     protected $binary;
 
     /**
+     * The timeout for the generated processes
+     *
+     * @var integer|float
+     */
+    private $timeout;
+
+    /**
      * An internal ProcessBuilder.
      *
      * Note that this one is used only if Symfony ProcessBuilder has method
@@ -112,6 +119,28 @@ class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
     /**
      * @inheritdoc
      */
+    public function setTimeout($timeout)
+    {
+        $this->timeout = $timeout;
+
+        if (!static::$emulateSfLTS) {
+            $this->builder->setTimeout($this->timeout);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getTimeout()
+    {
+        return $this->timeout;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function create($arguments = array())
     {
         if (null === $this->binary) {
@@ -125,9 +154,13 @@ class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
         if (static::$emulateSfLTS) {
             array_unshift($arguments, $this->binary);
 
-            return ProcessBuilder::create($arguments)->getProcess();
+            return ProcessBuilder::create($arguments)
+                ->setTimeout($this->timeout)
+                ->getProcess();
         } else {
-            return $this->builder->setArguments($arguments)->getProcess();
+            return $this->builder
+                ->setArguments($arguments)
+                ->getProcess();
         }
     }
 

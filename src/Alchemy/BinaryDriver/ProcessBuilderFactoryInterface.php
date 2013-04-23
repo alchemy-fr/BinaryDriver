@@ -42,4 +42,22 @@ interface ProcessBuilderFactoryInterface
      * @throws InvalidArgumentException In case binary is not executable
      */
     public function useBinary($binary);
+
+    /**
+     * Set the default timeout to apply on created processes.
+     *
+     * @param integer|float $timeout
+     *
+     * @return ProcessBuilderFactoryInterface
+     *
+     * @throws InvalidArgumentException In case the timeout is not valid
+     */
+    public function setTimeout($timeout);
+
+    /**
+     * Returns the current timeout applied to the created processes.
+     *
+     * @return integer|float
+     */
+    public function getTimeout();
 }
