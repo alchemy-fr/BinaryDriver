@@ -1,0 +1,104 @@
+<?php
+
+namespace Alchemy\BinaryDriver;
+
+use Alchemy\BinaryDriver\Exception\InvalidArgumentException;
+
+class Configuration implements ConfigurationInterface
+{
+    private $data;
+
+    public function __construct(array $data = array())
+    {
+        $this->data = $data;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->data);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function get($key)
+    {
+        if (!isset($this->data[$key])) {
+            throw new InvalidArgumentException(sprintf('Key `%s` is not defined', $key));
+        }
+
+        return $this->data[$key];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function set($key, $value)
+    {
+        $this->data[$key] = $value;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function has($key)
+    {
+        return array_key_exists($key, $this->data);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function remove($key)
+    {
+        $value = $this->get($key);
+        unset($this->data[$key]);
+
+        return $value;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function all()
+    {
+        return $this->data;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function offsetExists($offset)
+    {
+        return $this->has($offset);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function offsetGet($offset)
+    {
+        return $this->get($offset);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function offsetSet($offset, $value)
+    {
+        $this->set($offset, $value);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function offsetUnset($offset)
+    {
+        $this->remove($offset);
+    }
+}
