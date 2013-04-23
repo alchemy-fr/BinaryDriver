@@ -26,6 +26,43 @@ $process = $factory->create(array('-r', 'echo "Hello !";'));
 echo $process->getCommandLine();
 ```
 
+## Configuration
+
+A simple configuration object, providing an ArrayAccess and IteratorAggregate
+interface.
+
+```php
+use Alchemy\BinaryDriver\Configuration;
+
+$conf = new Configuration(array('timeout' => 0));
+
+echo $conf->get('timeout');
+
+if ($conf->has('param')) {
+    $conf->remove('param');
+}
+
+$conf->set('timeout', 20);
+
+$conf->all();
+```
+
+Same example using the ArrayAccess interface :
+
+```php
+use Alchemy\BinaryDriver\Configuration;
+
+$conf = new Configuration(array('timeout' => 0));
+
+echo $conf['timeout'];
+
+if (isset($conf['param'])) {
+    unset($conf['param']);
+}
+
+$conf['timeout'] = 20;
+```
+
 ## License
 
 This project is released under the MIT license.
