@@ -2,6 +2,8 @@
 
 Binary-Driver is a set of PHP tools to build binary drivers.
 
+[![Build Status](https://travis-ci.org/alchemy-fr/BinaryDriver.png?branch=master)](https://travis-ci.org/alchemy-fr/BinaryDriver)
+
 ## ProcessBuilderFactory
 
 ProcessBuilderFactory ease spawning processes by generating Symfony [Process]
