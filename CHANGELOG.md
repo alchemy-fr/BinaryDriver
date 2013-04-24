@@ -1,6 +1,11 @@
 CHANGELOG
 ---------
 
+* 1.2.1 (2013-04-24)
+
+  * Add ConfigurationAwareInterface
+  * Add ProcessBuilderAwareInterface
+
 * 1.2.0 (2013-04-24)
 
   * Add BinaryDriver\Configuration
