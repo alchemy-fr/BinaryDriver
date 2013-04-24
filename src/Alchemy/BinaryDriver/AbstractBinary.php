@@ -33,6 +33,7 @@ class AbstractBinary implements BinaryInterface
         $this->factory = $factory;
         $this->logger = $logger;
         $this->configuration = $configuration;
+        $this->applyProcessConfiguration();
     }
 
     /**
@@ -51,6 +52,7 @@ class AbstractBinary implements BinaryInterface
     public function setConfiguration(ConfigurationInterface $configuration)
     {
         $this->configuration = $configuration;
+        $this->applyProcessConfiguration();
 
         return $this;
     }
@@ -93,6 +95,7 @@ class AbstractBinary implements BinaryInterface
     public function setProcessBuilderFactory(ProcessBuilderFactoryInterface $factory)
     {
         $this->factory = $factory;
+        $this->applyProcessConfiguration();
 
         return $this;
     }
@@ -130,5 +133,14 @@ class AbstractBinary implements BinaryInterface
         $configuration = $configuration instanceof ConfigurationInterface ? $configuration : new Configuration($configuration);
 
         return new static(new ProcessBuilderFactory($binary), $logger, $configuration);
+    }
+
+    private function applyProcessConfiguration()
+    {
+        if ($this->configuration->has('timeout')) {
+            $this->factory->setTimeout($this->configuration->get('timeout'));
+        }
+
+        return $this;
     }
 }

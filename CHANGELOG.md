@@ -1,6 +1,10 @@
 CHANGELOG
 ---------
 
+* 1.3.1 (2013-04-24)
+
+  * Add timeouts handling
+
 * 1.3.0 (2013-04-24)
 
   * Add BinaryInterface and AbstractBinary
