@@ -29,8 +29,8 @@ interface ConfigurationInterface extends \ArrayAccess, \IteratorAggregate
     /**
      * Set a value to configuration
      *
-     * @param string $key The key
-     * @param mixed $value The value corresponding to the key
+     * @param string $key   The key
+     * @param mixed  $value The value corresponding to the key
      */
     public function set($key, $value);
 

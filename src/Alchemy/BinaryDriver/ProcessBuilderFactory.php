@@ -80,7 +80,7 @@ class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
     /**
      * Covenient method for unit testing
      *
-     * @param ProcessBuilder $builder
+     * @param  ProcessBuilder        $builder
      * @return ProcessBuilderFactory
      */
     public function setBuilder(ProcessBuilder $builder)

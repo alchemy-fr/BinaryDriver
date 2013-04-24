@@ -20,8 +20,8 @@ interface BinaryInterface extends ConfigurationAwareInterface, ProcessBuilderFac
     /**
      * Loads a binary
      *
-     * @param string|array $binaries A binary name or an array of binary names
-     * @param null||LoggerInterface $logger A Logger
+     * @param string|array                 $binaries      A binary name or an array of binary names
+     * @param null||LoggerInterface        $logger        A Logger
      * @param array|ConfigurationInterface $configuration The configuration
      *
      * @throws ExecutableNotFoundException In case none of the binaries were found
