@@ -6,8 +6,8 @@ Binary-Driver is a set of PHP tools to build binary drivers.
 
 ## AbstractBinary
 
-AbstractBinary provides an abstract class to build a binary driver. It implements
-BinaryInterface.
+`AbstractBinary` provides an abstract class to build a binary driver. It implements
+`BinaryInterface`.
 
 ## ProcessBuilderFactory
 
@@ -33,7 +33,7 @@ echo $process->getCommandLine();
 
 ## Configuration
 
-A simple configuration object, providing an ArrayAccess and IteratorAggregate
+A simple configuration object, providing an `ArrayAccess` and `IteratorAggregate`
 interface.
 
 ```php
@@ -52,7 +52,7 @@ $conf->set('timeout', 20);
 $conf->all();
 ```
 
-Same example using the ArrayAccess interface :
+Same example using the `ArrayAccess` interface :
 
 ```php
 use Alchemy\BinaryDriver\Configuration;
