@@ -1,6 +1,10 @@
 CHANGELOG
 ---------
 
+* 1.3.0 (2013-04-24)
+
+  * Add BinaryInterface and AbstractBinary
+
 * 1.2.1 (2013-04-24)
 
   * Add ConfigurationAwareInterface
