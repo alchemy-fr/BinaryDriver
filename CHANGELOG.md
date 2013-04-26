@@ -1,6 +1,10 @@
 CHANGELOG
 ---------
 
+* 1.3.2 (2013-04-26)
+
+  * Add BinaryDriverTestCase for testing BinaryDriver implementations.
+
 * 1.3.1 (2013-04-24)
 
   * Add timeouts handling
