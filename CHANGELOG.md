@@ -1,6 +1,10 @@
 CHANGELOG
 ---------
 
+* 1.3.3 (2013-04-26)
+
+  * Add BinaryDriver::createProcessMock method.
+
 * 1.3.2 (2013-04-26)
 
   * Add BinaryDriverTestCase for testing BinaryDriver implementations.
