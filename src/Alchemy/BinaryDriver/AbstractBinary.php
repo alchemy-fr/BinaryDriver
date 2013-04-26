@@ -12,12 +12,15 @@
 namespace Alchemy\BinaryDriver;
 
 use Alchemy\BinaryDriver\Exception\ExecutableNotFoundException;
+use Alchemy\BinaryDriver\Exception\ExecutionFailureException;
 use Monolog\Logger;
 use Monolog\Handler\NullHandler;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Process\ExecutableFinder;
+use Symfony\Component\Process\Process;
+use Symfony\Component\Process\Exception\RuntimeException;
 
-class AbstractBinary implements BinaryInterface
+abstract class AbstractBinary implements BinaryInterface
 {
     /** @var ConfigurationInterface */
     protected $configuration;
@@ -135,6 +138,52 @@ class AbstractBinary implements BinaryInterface
         return new static(new ProcessBuilderFactory($binary), $logger, $configuration);
     }
 
+    /**
+     * Returns the name of the driver
+     *
+     * @return string
+     */
+    abstract public function getName();
+
+    /**
+     * Executes a process, logs events
+     *
+     * @param Process $process
+     * @param Boolean $bypassErrors Set to true to disable throwing ExecutionFailureExceptions
+     *
+     * @return string The Process output
+     *
+     * @throws ExecutionFailureException in case of process failure.
+     */
+    protected function run(Process $process, $bypassErrors = false)
+    {
+        $this->logger->info(sprintf(
+            '%s running command %s', $this->getName(), $process->getCommandLine()
+        ));
+
+        try {
+            $process->run();
+        } catch (RuntimeException $e) {
+            if (!$bypassErrors) {
+                $this->doExecutionFailure($process->getCommandLine(), $e);
+            }
+        }
+
+        if (!$bypassErrors && !$process->isSuccessful()) {
+            $this->doExecutionFailure($process->getCommandLine());
+        } elseif (!$process->isSuccessful()) {
+            $this->logger->error(sprintf(
+                '%s failed to execute command %s', $this->getName(), $process->getCommandLine()
+            ));
+
+            return;
+        } else {
+            $this->logger->info(sprintf('%s executed command successfully', $this->getName()));
+
+            return $process->getOutput();
+        }
+    }
+
     private function applyProcessConfiguration()
     {
         if ($this->configuration->has('timeout')) {
@@ -142,5 +191,15 @@ class AbstractBinary implements BinaryInterface
         }
 
         return $this;
+    }
+
+    private function doExecutionFailure($command, \Exception $e = null)
+    {
+        $this->logger->error(sprintf(
+            '%s failed to execute command %s', $this->getName(), $command
+        ));
+        throw new ExecutionFailureException(sprintf(
+            '%s failed to execute command %s', $this->getName(), $command
+        ), $e ? $e->getCode() : null, $e ?: null);
     }
 }
