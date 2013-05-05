@@ -16,8 +16,10 @@ use Symfony\Component\Process\Process;
 
 interface ProcessBuilderFactoryInterface
 {
-     /**
+    /**
      * Returns a new instance of Symfony Process
+     *
+     * @param string|array $arguments An argument or an array of arguments
      *
      * @return Process
      *
