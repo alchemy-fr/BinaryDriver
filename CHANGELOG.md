@@ -1,6 +1,10 @@
 CHANGELOG
 ---------
 
+* 1.3.5 (2013-xx-xx)
+
+  * Extract process run management to ProcessRunner.
+
 * 1.3.4 (2013-04-26)
 
   * Add BinaryDriver::run method.

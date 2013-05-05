@@ -18,7 +18,6 @@ use Monolog\Handler\NullHandler;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\Process;
-use Symfony\Component\Process\Exception\RuntimeException;
 
 abstract class AbstractBinary implements BinaryInterface
 {
@@ -31,11 +30,14 @@ abstract class AbstractBinary implements BinaryInterface
     /** @var LoggerInterface */
     protected $logger;
 
+    private $processRunner;
+
     public function __construct(ProcessBuilderFactoryInterface $factory, LoggerInterface $logger, ConfigurationInterface $configuration)
     {
         $this->factory = $factory;
         $this->logger = $logger;
         $this->configuration = $configuration;
+        $this->processRunner = new ProcessRunner($this->logger, $this->getName());
         $this->applyProcessConfiguration();
     }
 
@@ -106,6 +108,24 @@ abstract class AbstractBinary implements BinaryInterface
     /**
      * {@inheritdoc}
      */
+    public function getProcessRunner()
+    {
+        return $this->processRunner;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setProcessRunner(ProcessRunnerInterface $runner)
+    {
+        $this->processRunner = $runner;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public static function load($binaries, LoggerInterface $logger = null, $configuration = array())
     {
         $finder = new ExecutableFinder();
@@ -157,31 +177,7 @@ abstract class AbstractBinary implements BinaryInterface
      */
     protected function run(Process $process, $bypassErrors = false)
     {
-        $this->logger->info(sprintf(
-            '%s running command %s', $this->getName(), $process->getCommandLine()
-        ));
-
-        try {
-            $process->run();
-        } catch (RuntimeException $e) {
-            if (!$bypassErrors) {
-                $this->doExecutionFailure($process->getCommandLine(), $e);
-            }
-        }
-
-        if (!$bypassErrors && !$process->isSuccessful()) {
-            $this->doExecutionFailure($process->getCommandLine());
-        } elseif (!$process->isSuccessful()) {
-            $this->logger->error(sprintf(
-                '%s failed to execute command %s', $this->getName(), $process->getCommandLine()
-            ));
-
-            return;
-        } else {
-            $this->logger->info(sprintf('%s executed command successfully', $this->getName()));
-
-            return $process->getOutput();
-        }
+        return $this->processRunner->run($process, $bypassErrors);
     }
 
     private function applyProcessConfiguration()
@@ -191,15 +187,5 @@ abstract class AbstractBinary implements BinaryInterface
         }
 
         return $this;
-    }
-
-    private function doExecutionFailure($command, \Exception $e = null)
-    {
-        $this->logger->error(sprintf(
-            '%s failed to execute command %s', $this->getName(), $command
-        ));
-        throw new ExecutionFailureException(sprintf(
-            '%s failed to execute command %s', $this->getName(), $command
-        ), $e ? $e->getCode() : null, $e ?: null);
     }
 }

@@ -7,8 +7,6 @@ use Alchemy\BinaryDriver\BinaryDriverTestCase;
 use Alchemy\BinaryDriver\Configuration;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\Process;
-use Alchemy\BinaryDriver\Exception\ExecutionFailureException;
-use Symfony\Component\Process\Exception\RuntimeException as ProcessRuntimeException;
 
 class AbstractBinaryTest extends BinaryDriverTestCase
 {
@@ -151,142 +149,6 @@ class AbstractBinaryTest extends BinaryDriverTestCase
 
         $imp->setProcessBuilderFactory($factory);
     }
-
-    public function testRunSuccessFullProcess()
-    {
-        $factory = $this->createProcessBuilderFactoryMock();
-        $logger = $this->createLoggerMock();
-        $configuration = $this->createConfigurationMock();
-
-        $process = $this->createProcessMock(1, true, '--helloworld--', "Kikoo Romain");
-
-        $logger
-            ->expects($this->never())
-            ->method('error');
-        $logger
-            ->expects($this->exactly(2))
-            ->method('info');
-
-        $implementation = new Implementation($factory, $logger, $configuration);
-        $this->assertEquals('Kikoo Romain', $implementation->doRun($process));
-    }
-
-    public function testRunSuccessFullProcessBypassingErrors()
-    {
-        $factory = $this->createProcessBuilderFactoryMock();
-        $logger = $this->createLoggerMock();
-        $configuration = $this->createConfigurationMock();
-
-        $process = $this->createProcessMock(1, true, '--helloworld--', "Kikoo Romain");
-
-        $logger
-            ->expects($this->never())
-            ->method('error');
-        $logger
-            ->expects($this->exactly(2))
-            ->method('info');
-
-        $implementation = new Implementation($factory, $logger, $configuration);
-        $this->assertEquals('Kikoo Romain', $implementation->doRunAndBypassErrors($process));
-    }
-
-    public function testRunFailingProcess()
-    {
-        $factory = $this->createProcessBuilderFactoryMock();
-        $logger = $this->createLoggerMock();
-        $configuration = $this->createConfigurationMock();
-
-        $process = $this->createProcessMock(1, false, '--helloworld--');
-
-        $logger
-            ->expects($this->once())
-            ->method('error');
-        $logger
-            ->expects($this->once())
-            ->method('info');
-
-        $implementation = new Implementation($factory, $logger, $configuration);
-        try {
-            $implementation->doRun($process);
-            $this->fail('An exception should have been raised');
-        } catch (ExecutionFailureException $e) {
-
-        }
-    }
-
-    public function testRunFailingProcessWithException()
-    {
-        $factory = $this->createProcessBuilderFactoryMock();
-        $logger = $this->createLoggerMock();
-        $configuration = $this->createConfigurationMock();
-
-        $exception = new ProcessRuntimeException('Process Failed');
-        $process = $this->getMockBuilder('Symfony\Component\Process\Process')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $process->expects($this->once())
-            ->method('run')
-            ->will($this->throwException($exception));
-
-        $logger
-            ->expects($this->once())
-            ->method('error');
-        $logger
-            ->expects($this->once())
-            ->method('info');
-
-        $implementation = new Implementation($factory, $logger, $configuration);
-        try {
-            $implementation->doRun($process);
-            $this->fail('An exception should have been raised');
-        } catch (ExecutionFailureException $e) {
-            $this->assertEquals($exception, $e->getPrevious());
-        }
-    }
-
-    public function testRunfailingProcessBypassingErrors()
-    {
-        $factory = $this->createProcessBuilderFactoryMock();
-        $logger = $this->createLoggerMock();
-        $configuration = $this->createConfigurationMock();
-
-        $process = $this->createProcessMock(1, false, '--helloworld--', 'Hello output');
-
-        $logger
-            ->expects($this->once())
-            ->method('error');
-        $logger
-            ->expects($this->once())
-            ->method('info');
-
-        $implementation = new Implementation($factory, $logger, $configuration);
-        $this->assertNull($implementation->doRunAndBypassErrors($process));
-    }
-
-    public function testRunFailingProcessWithExceptionBypassingErrors()
-    {
-        $factory = $this->createProcessBuilderFactoryMock();
-        $logger = $this->createLoggerMock();
-        $configuration = $this->createConfigurationMock();
-
-        $exception = new ProcessRuntimeException('Process Failed');
-        $process = $this->getMockBuilder('Symfony\Component\Process\Process')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $process->expects($this->once())
-            ->method('run')
-            ->will($this->throwException($exception));
-
-        $logger
-            ->expects($this->once())
-            ->method('error');
-        $logger
-            ->expects($this->once())
-            ->method('info');
-
-        $implementation = new Implementation($factory, $logger, $configuration);
-        $this->assertNull($implementation->doRunAndBypassErrors($process));
-    }
 }
 
 class Implementation extends AbstractBinary
@@ -294,15 +156,5 @@ class Implementation extends AbstractBinary
     public function getName()
     {
         return 'Implementation';
-    }
-
-    public function doRun(Process $process)
-    {
-        return $this->run($process, false);
-    }
-
-    public function doRunAndBypassErrors(Process $process)
-    {
-        return $this->run($process, true);
     }
 }

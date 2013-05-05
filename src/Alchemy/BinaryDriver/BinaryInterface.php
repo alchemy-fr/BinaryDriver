@@ -15,7 +15,7 @@ use Alchemy\BinaryDriver\Exception\ExecutableNotFoundException;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 
-interface BinaryInterface extends ConfigurationAwareInterface, ProcessBuilderFactoryAwareInterface, LoggerAwareInterface
+interface BinaryInterface extends ConfigurationAwareInterface, ProcessBuilderFactoryAwareInterface, LoggerAwareInterface, ProcessRunnerAwareInterface
 {
     /**
      * Loads a binary
