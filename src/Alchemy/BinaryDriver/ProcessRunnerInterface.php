@@ -22,7 +22,7 @@ interface ProcessRunnerInterface extends LoggerAwareInterface
      * Executes a process, logs events
      *
      * @param Process          $process
-     * @param SplObjectStorage $listeners Some listeners
+     * @param SplObjectStorage $listeners    Some listeners
      * @param Boolean          $bypassErrors Set to true to disable throwing ExecutionFailureExceptions
      *
      * @return string The Process output

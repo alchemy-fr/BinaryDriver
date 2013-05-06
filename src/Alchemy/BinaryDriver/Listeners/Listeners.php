@@ -26,7 +26,7 @@ class Listeners extends EventEmitter
     public function register(ListenerInterface $listener, EventEmitter $target = null)
     {
         $EElisteners = array();
-        
+
         if (null !== $target) {
             $EElisteners = $this->forwardEvents($listener, $target, $listener->forwardedEvents());
         }
