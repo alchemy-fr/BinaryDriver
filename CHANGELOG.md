@@ -1,7 +1,7 @@
 CHANGELOG
 ---------
 
-* 1.3.5 (2013-xx-xx)
+* 1.4.0 (2013-xx-xx)
 
   * Extract process run management to ProcessRunner.
 
