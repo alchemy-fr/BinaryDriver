@@ -13,11 +13,10 @@ namespace Alchemy\BinaryDriver;
 
 use Alchemy\BinaryDriver\Exception\ExecutableNotFoundException;
 use Alchemy\BinaryDriver\Listeners\ListenerInterface;
-use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Evenement\EventEmitterInterface;
 
-interface BinaryInterface extends ConfigurationAwareInterface, ProcessBuilderFactoryAwareInterface, LoggerAwareInterface, ProcessRunnerAwareInterface, EventEmitterInterface
+interface BinaryInterface extends ConfigurationAwareInterface, ProcessBuilderFactoryAwareInterface, ProcessRunnerAwareInterface, EventEmitterInterface
 {
     /**
      * Adds a listener to the binary driver

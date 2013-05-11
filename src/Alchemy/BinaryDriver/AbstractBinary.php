@@ -30,9 +30,6 @@ abstract class AbstractBinary extends EventEmitter implements BinaryInterface
     /** @var ProcessBuilderFactoryInterface */
     protected $factory;
 
-    /** @var LoggerInterface */
-    protected $logger;
-
     /** @var ProcessRunner */
     private $processRunner;
 
@@ -42,9 +39,8 @@ abstract class AbstractBinary extends EventEmitter implements BinaryInterface
     public function __construct(ProcessBuilderFactoryInterface $factory, LoggerInterface $logger, ConfigurationInterface $configuration)
     {
         $this->factory = $factory;
-        $this->logger = $logger;
         $this->configuration = $configuration;
-        $this->processRunner = new ProcessRunner($this->logger, $this->getName());
+        $this->processRunner = new ProcessRunner($logger, $this->getName());
         $this->listenersManager = new Listeners();
         $this->applyProcessConfiguration();
     }
@@ -86,28 +82,6 @@ abstract class AbstractBinary extends EventEmitter implements BinaryInterface
     {
         $this->configuration = $configuration;
         $this->applyProcessConfiguration();
-
-        return $this;
-    }
-
-    /**
-     * Get the current logger.
-     *
-     * @return LoggerInterface
-     */
-    public function getLogger()
-    {
-        return $this->logger;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return BinaryInterface
-     */
-    public function setLogger(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
 
         return $this;
     }

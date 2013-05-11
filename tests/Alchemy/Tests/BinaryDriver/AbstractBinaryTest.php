@@ -79,7 +79,7 @@ class AbstractBinaryTest extends BinaryDriverTestCase
         $logger = $this->getMock('Psr\Log\LoggerInterface');
         $imp = Implementation::load('php', $logger);
 
-        $this->assertEquals($logger, $imp->getLogger());
+        $this->assertEquals($logger, $imp->getProcessRunner()->getLogger());
     }
 
     public function testLoadWithCustomConfigurationAsArray()
@@ -114,15 +114,6 @@ class AbstractBinaryTest extends BinaryDriverTestCase
 
         $imp->setConfiguration($conf);
         $this->assertEquals($conf, $imp->getConfiguration());
-    }
-
-    public function testLoggerGetterAndSetters()
-    {
-        $imp = Implementation::load('php');
-        $logger = $this->getMock('Psr\Log\LoggerInterface');
-
-        $imp->setLogger($logger);
-        $this->assertEquals($logger, $imp->getLogger());
     }
 
     public function testTimeoutIsSetOnConstruction()
