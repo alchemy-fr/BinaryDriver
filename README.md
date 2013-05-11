@@ -9,6 +9,37 @@ Binary-Driver is a set of PHP tools to build binary drivers.
 `AbstractBinary` provides an abstract class to build a binary driver. It implements
 `BinaryInterface`.
 
+Implementation example :
+
+```php
+use Alchemy\BinaryDriver\AbstractBinary;
+
+class LsDriver extends AbstractBinary
+{
+    public function getName()
+    {
+        return 'my driver';
+    }
+
+    public function simpleListing()
+    {
+        // will return the output of `ls`
+        return $this->run($this->factory->create());
+    }
+
+    public function detailledListing()
+    {
+        // will return the output of `ls -a -l`
+        return $this->run($this->factory->create('-a', '-l'));
+    }
+}
+
+$parser = new LsParser();
+
+$driver = Driver::load('ls');
+$parser->parse($driver->simpleListing());
+```
+
 ## Listeners
 
 You can add custom listeners on processes.
