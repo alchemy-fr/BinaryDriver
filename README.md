@@ -36,7 +36,7 @@ class DebugListener extends EventEmitter implements ListenerInterface
 
 $listener = new DebugListener();
 
-$driver = CustomImplemntation::load('php');
+$driver = CustomImplementation::load('php');
 
 // adds listener
 $driver->listen($listener);
