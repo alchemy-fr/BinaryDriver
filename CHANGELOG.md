@@ -5,6 +5,8 @@ CHANGELOG
 
   * Extract process run management to ProcessRunner.
   * Add support for process listeners.
+  * BC break : ProcessRunnerInterface::run now takes an SplObjectStorage containing
+    listeners as second argument.
 
 * 1.3.4 (2013-04-26)
 
