@@ -4,6 +4,26 @@ Binary-Driver is a set of PHP tools to build binary drivers.
 
 [![Build Status](https://travis-ci.org/alchemy-fr/BinaryDriver.png?branch=master)](https://travis-ci.org/alchemy-fr/BinaryDriver)
 
+## Why ?
+
+You may wonder *Why building a library while I can use `exec` or
+[symfony/process](https://github.com/symfony/Process) ?*.
+
+Here is a simple answer :
+
+ - If you use `exec`, `passthru`, `system`, `proc_open` or any low level process
+   handling in PHP, you should have a look to [symfony/process](https://github.com/symfony/Process)
+   component that will provide an OO portable, testable and secure interface to
+   deal with this. It seems easy at first approach, but if you look at this
+   component unit tests, you will see that handling process in a simple interface
+   can easily become a nightmare.
+
+ - If you already use symfony/process, and want to build binary drivers, you
+   will always have the same common methods an object to configure, log, debug,
+   and generate processes.
+   This library is a base library to implement any binary driver with this
+   common set of needs.
+
 ## AbstractBinary
 
 `AbstractBinary` provides an abstract class to build a binary driver. It implements
