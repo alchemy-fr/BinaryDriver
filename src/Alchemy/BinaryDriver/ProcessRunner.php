@@ -13,12 +13,16 @@ namespace Alchemy\BinaryDriver;
 
 use Alchemy\BinaryDriver\Exception\ExecutionFailureException;
 use Psr\Log\LoggerInterface;
+use SplObjectStorage;
 use Symfony\Component\Process\Exception\RuntimeException;
 use Symfony\Component\Process\Process;
 
 class ProcessRunner implements ProcessRunnerInterface
 {
+    /** @var LoggerInterface */
     private $logger;
+
+    /** @var string */
     private $name;
 
     public function __construct(LoggerInterface $logger, $name)
@@ -27,6 +31,11 @@ class ProcessRunner implements ProcessRunnerInterface
         $this->name = $name;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @return ProcessRunner
+     */
     public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
@@ -34,29 +43,25 @@ class ProcessRunner implements ProcessRunnerInterface
         return $this;
     }
 
+    /**
+     * @return LoggerInterface
+     */
     public function getLogger()
     {
         return $this->logger;
     }
 
     /**
-     * Executes a process, logs events
-     *
-     * @param Process $process
-     * @param Boolean $bypassErrors Set to true to disable throwing ExecutionFailureExceptions
-     *
-     * @return string The Process output
-     *
-     * @throws ExecutionFailureException in case of process failure.
+     * {@inheritdoc}
      */
-    public function run(Process $process, $bypassErrors)
+    public function run(Process $process, SplObjectStorage $listeners, $bypassErrors)
     {
         $this->logger->info(sprintf(
             '%s running command %s', $this->name, $process->getCommandLine()
         ));
 
         try {
-            $process->run();
+            $process->run($this->buildCallback($listeners));
         } catch (RuntimeException $e) {
             if (!$bypassErrors) {
                 $this->doExecutionFailure($process->getCommandLine(), $e);
@@ -78,6 +83,15 @@ class ProcessRunner implements ProcessRunnerInterface
         }
     }
 
+    private function buildCallback(SplObjectStorage $listeners)
+    {
+        return function ($type, $data) use ($listeners) {
+            foreach ($listeners as $listener) {
+                $listener->handle($type, $data);
+            }
+        };
+    }
+
     private function doExecutionFailure($command, \Exception $e = null)
     {
         $this->logger->error(sprintf(
@@ -88,4 +102,3 @@ class ProcessRunner implements ProcessRunnerInterface
         ), $e ? $e->getCode() : null, $e ?: null);
     }
 }
-

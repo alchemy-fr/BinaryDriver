@@ -9,6 +9,46 @@ Binary-Driver is a set of PHP tools to build binary drivers.
 `AbstractBinary` provides an abstract class to build a binary driver. It implements
 `BinaryInterface`.
 
+## Listeners
+
+You can add custom listeners on processes.
+Listeners are built on top of [Evenement](https://github.com/igorw/evenement)
+and must implement `Alchemy\BinaryDriver\ListenerInterface`.
+
+```php
+use Symfony\Component\Process\Process;
+
+class DebugListener extends EventEmitter implements ListenerInterface
+{
+    public function handle($type, $data)
+    {
+        foreach (explode(PHP_EOL, $data) as $line) {
+            $this->emit($type === Process::ERR ? 'error' : 'out', array($line));
+        }
+    }
+
+    public function forwardedEvents()
+    {
+        // forward 'error' events to the BinaryInterface
+        return array('error');
+    }
+}
+
+$listener = new DebugListener();
+
+$driver = CustomImplementation::load('php');
+
+// adds listener
+$driver->listen($listener);
+
+$driver->on('error', function ($line) {
+    echo '[ERROR] ' . $line . PHP_EOL;
+});
+
+// removes listener
+$driver->unlisten($listener);
+```
+
 ## ProcessBuilderFactory
 
 ProcessBuilderFactory ease spawning processes by generating Symfony [Process]
