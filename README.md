@@ -40,6 +40,16 @@ $driver = Driver::load('ls');
 $parser->parse($driver->simpleListing());
 ```
 
+## Logging
+
+You can log events with a `Psr\Log\LoggerInterface` by passing it in the load
+method as second argument :
+
+```php
+$logger = new Monolog\Logger('driver');
+$driver = Driver::load('ls', $logger);
+```
+
 ## Listeners
 
 You can add custom listeners on processes.
