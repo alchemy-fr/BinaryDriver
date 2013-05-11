@@ -80,6 +80,22 @@ $driver->on('error', function ($line) {
 $driver->unlisten($listener);
 ```
 
+### Bundled listeners
+
+The debug listener is a simple listener to catch `stderr` and `stdout` outputs ;
+read the implementation for customization.
+
+```php
+use Alchemy\BinaryDriver\Listeners\DebugListener;
+
+$driver = CustomImplementation::load('php');
+$driver->listen(new DebugListener());
+
+$driver->on('debug', function ($line) {
+    echo $line;
+});
+```
+
 ## ProcessBuilderFactory
 
 ProcessBuilderFactory ease spawning processes by generating Symfony [Process]
