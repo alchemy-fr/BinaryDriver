@@ -1,7 +1,7 @@
 CHANGELOG
 ---------
 
-* 1.4.0 (2013-xx-xx)
+* 1.4.0 (2013-05-11)
 
   * Extract process run management to ProcessRunner.
   * Add support for process listeners.
