@@ -13,13 +13,16 @@ namespace Alchemy\BinaryDriver;
 
 use Alchemy\BinaryDriver\Exception\ExecutableNotFoundException;
 use Alchemy\BinaryDriver\Exception\ExecutionFailureException;
+use Alchemy\BinaryDriver\Listeners\Listeners;
+use Alchemy\BinaryDriver\Listeners\ListenerInterface;
+use Evenement\EventEmitter;
 use Monolog\Logger;
 use Monolog\Handler\NullHandler;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\Process;
 
-abstract class AbstractBinary implements BinaryInterface
+abstract class AbstractBinary extends EventEmitter implements BinaryInterface
 {
     /** @var ConfigurationInterface */
     protected $configuration;
@@ -30,7 +33,11 @@ abstract class AbstractBinary implements BinaryInterface
     /** @var LoggerInterface */
     protected $logger;
 
+    /** @var ProcessRunner */
     private $processRunner;
+
+    /** @var Listeners */
+    private $listenersManager;
 
     public function __construct(ProcessBuilderFactoryInterface $factory, LoggerInterface $logger, ConfigurationInterface $configuration)
     {
@@ -38,7 +45,28 @@ abstract class AbstractBinary implements BinaryInterface
         $this->logger = $logger;
         $this->configuration = $configuration;
         $this->processRunner = new ProcessRunner($this->logger, $this->getName());
+        $this->listenersManager = new Listeners();
         $this->applyProcessConfiguration();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function listen(ListenerInterface $listener)
+    {
+        $this->listenersManager->register($listener, $this);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function unlisten(ListenerInterface $listener)
+    {
+        $this->listenersManager->unregister($listener, $this);
+
+        return $this;
     }
 
     /**
@@ -177,7 +205,7 @@ abstract class AbstractBinary implements BinaryInterface
      */
     protected function run(Process $process, $bypassErrors = false)
     {
-        return $this->processRunner->run($process, $bypassErrors);
+        return $this->processRunner->run($process, $this->listenersManager->storage, $bypassErrors);
     }
 
     private function applyProcessConfiguration()

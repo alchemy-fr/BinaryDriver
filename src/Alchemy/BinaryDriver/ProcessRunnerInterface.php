@@ -13,6 +13,7 @@ namespace Alchemy\BinaryDriver;
 
 use Alchemy\BinaryDriver\Exception\ExecutionFailureException;
 use Psr\Log\LoggerAwareInterface;
+use SplObjectStorage;
 use Symfony\Component\Process\Process;
 
 interface ProcessRunnerInterface extends LoggerAwareInterface
@@ -20,12 +21,13 @@ interface ProcessRunnerInterface extends LoggerAwareInterface
     /**
      * Executes a process, logs events
      *
-     * @param Process $process
-     * @param Boolean $bypassErrors Set to true to disable throwing ExecutionFailureExceptions
+     * @param Process          $process
+     * @param SplObjectStorage $listeners    Some listeners
+     * @param Boolean          $bypassErrors Set to true to disable throwing ExecutionFailureExceptions
      *
      * @return string The Process output
      *
      * @throws ExecutionFailureException in case of process failure.
      */
-    public function run(Process $process, $bypassErrors);
+    public function run(Process $process, SplObjectStorage $listeners, $bypassErrors);
 }

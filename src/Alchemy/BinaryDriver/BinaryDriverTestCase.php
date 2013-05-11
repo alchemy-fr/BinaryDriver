@@ -27,14 +27,18 @@ class BinaryDriverTestCase extends \PHPUnit_Framework_TestCase
      *
      * @return Process
      */
-    public function createProcessMock($runs = 1, $success = true, $commandLine = null, $output = null, $error = null)
+    public function createProcessMock($runs = 1, $success = true, $commandLine = null, $output = null, $error = null, $callback = false)
     {
         $process = $this->getMockBuilder('Symfony\Component\Process\Process')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $process->expects($this->exactly($runs))
+        $builder = $process->expects($this->exactly($runs))
             ->method('run');
+
+        if (true === $callback) {
+            $builder->with($this->isInstanceOf('Closure'));
+        }
 
         $process->expects($this->any())
             ->method('isSuccessful')

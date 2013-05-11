@@ -149,6 +149,50 @@ class AbstractBinaryTest extends BinaryDriverTestCase
 
         $imp->setProcessBuilderFactory($factory);
     }
+
+    public function testListenRegistersAListener()
+    {
+        $imp = Implementation::load('php');
+
+        $listeners = $this->getMockBuilder('Alchemy\BinaryDriver\Listeners\Listeners')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $listener = $this->getMock('Alchemy\BinaryDriver\Listeners\ListenerInterface');
+
+        $listeners->expects($this->once())
+            ->method('register')
+            ->with($this->equalTo($listener), $this->equalTo($imp));
+
+        $reflexion = new \ReflectionClass('Alchemy\BinaryDriver\AbstractBinary');
+        $prop = $reflexion->getProperty('listenersManager');
+        $prop->setAccessible(true);
+        $prop->setValue($imp, $listeners);
+
+        $imp->listen($listener);
+    }
+
+    public function testUnlistenUnregistersAListener()
+    {
+        $imp = Implementation::load('php');
+
+        $listeners = $this->getMockBuilder('Alchemy\BinaryDriver\Listeners\Listeners')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $listener = $this->getMock('Alchemy\BinaryDriver\Listeners\ListenerInterface');
+
+        $listeners->expects($this->once())
+            ->method('unregister')
+            ->with($this->equalTo($listener), $this->equalTo($imp));
+
+        $reflexion = new \ReflectionClass('Alchemy\BinaryDriver\AbstractBinary');
+        $prop = $reflexion->getProperty('listenersManager');
+        $prop->setAccessible(true);
+        $prop->setValue($imp, $listeners);
+
+        $imp->unlisten($listener);
+    }
 }
 
 class Implementation extends AbstractBinary
