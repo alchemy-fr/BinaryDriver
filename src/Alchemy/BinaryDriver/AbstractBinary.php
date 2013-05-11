@@ -128,6 +128,18 @@ abstract class AbstractBinary extends EventEmitter implements BinaryInterface
     /**
      * {@inheritdoc}
      */
+    public function command($command, $bypassErrors = false)
+    {
+        if (!is_array($command)) {
+            $command = array($command);
+        }
+
+        return $this->run($this->factory->create($command), $bypassErrors);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public static function load($binaries, LoggerInterface $logger = null, $configuration = array())
     {
         $finder = new ExecutableFinder();

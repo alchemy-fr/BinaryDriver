@@ -5,7 +5,8 @@ CHANGELOG
 
   * Extract process run management to ProcessRunner.
   * Add support for process listeners.
-  * Provides bundled DebugListener
+  * Provides bundled DebugListener.
+  * Add BinaryInterface::command method.
   * BC break : ProcessRunnerInterface::run now takes an SplObjectStorage containing
     listeners as second argument.
   * BC break : BinaryInterface no longer implements LoggerAwareInterface

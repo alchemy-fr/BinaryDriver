@@ -39,26 +39,15 @@ class LsDriver extends AbstractBinary
 {
     public function getName()
     {
-        return 'my driver';
-    }
-
-    public function simpleListing()
-    {
-        // will return the output of `ls`
-        return $this->run($this->factory->create());
-    }
-
-    public function detailledListing()
-    {
-        // will return the output of `ls -a -l`
-        return $this->run($this->factory->create('-a', '-l'));
+        return 'ls driver';
     }
 }
 
 $parser = new LsParser();
 
 $driver = Driver::load('ls');
-$parser->parse($driver->simpleListing());
+// will return the output of `ls -a -l`
+$parser->parse($driver->command(array('-a', '-l')));
 ```
 
 ## Logging

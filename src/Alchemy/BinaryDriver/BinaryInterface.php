@@ -37,6 +37,20 @@ interface BinaryInterface extends ConfigurationAwareInterface, ProcessBuilderFac
     public function unlisten(ListenerInterface $listener);
 
     /**
+     * Runs a command against the driver.
+     *
+     * Calling this method on a `ls` driver with the command `-a` would run `ls -a`.
+     *
+     * @param array|string $command A command or an array of command
+     * @param Boolean $bypassErrors If set to true, an erronous process will not throw an exception
+     *
+     * @return string The command output
+     *
+     * @throws ExecutionFailureException in case of process failure.
+     */
+    public function command($command, $bypassErrors = false);
+
+    /**
      * Loads a binary
      *
      * @param string|array                 $binaries      A binary name or an array of binary names

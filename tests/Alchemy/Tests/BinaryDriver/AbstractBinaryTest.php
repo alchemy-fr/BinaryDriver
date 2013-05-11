@@ -6,7 +6,6 @@ use Alchemy\BinaryDriver\AbstractBinary;
 use Alchemy\BinaryDriver\BinaryDriverTestCase;
 use Alchemy\BinaryDriver\Configuration;
 use Symfony\Component\Process\ExecutableFinder;
-use Symfony\Component\Process\Process;
 
 class AbstractBinaryTest extends BinaryDriverTestCase
 {
@@ -161,6 +160,47 @@ class AbstractBinaryTest extends BinaryDriverTestCase
         $prop->setValue($imp, $listeners);
 
         $imp->listen($listener);
+    }
+
+    /**
+     * @dataProvider provideCommandParameters
+     */
+    public function testCommandRunsAProcess($parameters, $bypassErrors, $expectedParameters, $output)
+    {
+        $imp = Implementation::load('php');
+        $factory = $this->getMock('Alchemy\BinaryDriver\ProcessBuilderFactoryInterface');
+        $processRunner = $this->getMock('Alchemy\BinaryDriver\ProcessRunnerInterface');
+
+        $process = $this->getMockBuilder('Symfony\Component\Process\Process')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $processRunner->expects($this->once())
+            ->method('run')
+            ->with($this->equalTo($process), $this->isInstanceOf('SplObjectStorage'), $this->equalTo($bypassErrors))
+            ->will($this->returnValue($output));
+
+        $factory->expects($this->once())
+            ->method('create')
+            ->with($expectedParameters)
+            ->will($this->returnValue($process));
+
+        $imp->setProcessBuilderFactory($factory);
+        $imp->setProcessRunner($processRunner);
+
+        $this->assertEquals($output, $imp->command($parameters, $bypassErrors));
+    }
+
+    public function provideCommandParameters()
+    {
+        return array(
+            array('-a', false, array('-a'), 'loubda'),
+            array('-a', true, array('-a'), 'loubda'),
+            array('-a -b', false, array('-a -b'), 'loubda'),
+            array(array('-a'), false, array('-a'), 'loubda'),
+            array(array('-a'), true, array('-a'), 'loubda'),
+            array(array('-a', '-b'), false, array('-a', '-b'), 'loubda'),
+        );
     }
 
     public function testUnlistenUnregistersAListener()
