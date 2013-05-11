@@ -15,14 +15,15 @@ Here is a simple answer :
    handling in PHP, you should have a look to [symfony/process](https://github.com/symfony/Process)
    component that will provide an OO portable, testable and secure interface to
    deal with this. It seems easy at first approach, but if you look at this
-   component unit tests, you will see that handling process in a simple interface
-   can easily become a nightmare.
+   component [unit tests](https://github.com/symfony/Process/tree/master/Tests),
+   you will see that handling process in a simple interface can easily become a
+   nightmare.
 
  - If you already use symfony/process, and want to build binary drivers, you
-   will always have the same common methods an object to configure, log, debug,
-   and generate processes.
-   This library is a base library to implement any binary driver with this
-   common set of needs.
+   will always have the same common set of methods and objects to configure, log,
+   debug, and generate processes.
+   This library is a base to implement any binary driver with this common set of
+   needs.
 
 ## AbstractBinary
 
