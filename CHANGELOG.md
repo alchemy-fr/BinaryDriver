@@ -1,6 +1,11 @@
 CHANGELOG
 ---------
 
+* 1.4.1 (2013-05-22)
+
+  * Add third parameter to BinaryInterface::command method to pass a listener or
+    an array of listener that will be registered just the time of the command.
+
 * 1.4.0 (2013-05-11)
 
   * Extract process run management to ProcessRunner.
