@@ -15,6 +15,13 @@ class Listeners extends EventEmitter
         $this->storage = new SplObjectStorage();
     }
 
+    public function __clone()
+    {
+        $storage = $this->storage;
+        $this->storage = new SplObjectStorage();
+        $this->storage->addAll($storage);
+    }
+
     /**
      * Registers a listener, pass the listener events to the target.
      *

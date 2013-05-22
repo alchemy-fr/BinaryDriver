@@ -191,6 +191,68 @@ class AbstractBinaryTest extends BinaryDriverTestCase
         $this->assertEquals($output, $imp->command($parameters, $bypassErrors));
     }
 
+    /**
+     * @dataProvider provideCommandWithListenersParameters
+     */
+    public function testCommandWithTemporaryListeners($parameters, $bypassErrors, $expectedParameters, $output, $count, $listeners)
+    {
+        $imp = Implementation::load('php');
+        $factory = $this->getMock('Alchemy\BinaryDriver\ProcessBuilderFactoryInterface');
+        $processRunner = $this->getMock('Alchemy\BinaryDriver\ProcessRunnerInterface');
+
+        $process = $this->getMockBuilder('Symfony\Component\Process\Process')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $firstStorage = $secondStorage = null;
+
+        $processRunner->expects($this->exactly(2))
+            ->method('run')
+            ->with($this->equalTo($process), $this->isInstanceOf('SplObjectStorage'), $this->equalTo($bypassErrors))
+            ->will($this->returnCallback(function ($process, $storage, $errors) use ($output, &$firstStorage, &$secondStorage) {
+                if (null === $firstStorage) {
+                    $firstStorage = $storage;
+                } else {
+                    $secondStorage = $storage;
+                }
+
+                return $output;
+            }));
+
+        $factory->expects($this->exactly(2))
+            ->method('create')
+            ->with($expectedParameters)
+            ->will($this->returnValue($process));
+
+        $imp->setProcessBuilderFactory($factory);
+        $imp->setProcessRunner($processRunner);
+
+        $this->assertEquals($output, $imp->command($parameters, $bypassErrors, $listeners));
+        $this->assertCount($count, $firstStorage);
+        $this->assertEquals($output, $imp->command($parameters, $bypassErrors));
+        $this->assertCount(0, $secondStorage);
+    }
+
+    public function provideCommandWithListenersParameters()
+    {
+        $listener = $this->getMock('Alchemy\BinaryDriver\Listeners\ListenerInterface');
+        $listener->expects($this->any())
+            ->method('forwardedEvents')
+            ->will($this->returnValue(array()));
+
+        $listener2 = $this->getMock('Alchemy\BinaryDriver\Listeners\ListenerInterface');
+        $listener2->expects($this->any())
+            ->method('forwardedEvents')
+            ->will($this->returnValue(array()));
+
+        return array(
+            array('-a', false, array('-a'), 'loubda', 2, array($listener, $listener2)),
+            array('-a', false, array('-a'), 'loubda', 1, array($listener)),
+            array('-a', false, array('-a'), 'loubda', 1, $listener),
+            array('-a', false, array('-a'), 'loubda', 0, array()),
+        );
+    }
+
     public function provideCommandParameters()
     {
         return array(

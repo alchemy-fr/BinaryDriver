@@ -128,13 +128,13 @@ abstract class AbstractBinary extends EventEmitter implements BinaryInterface
     /**
      * {@inheritdoc}
      */
-    public function command($command, $bypassErrors = false)
+    public function command($command, $bypassErrors = false, $listeners = null)
     {
         if (!is_array($command)) {
             $command = array($command);
         }
 
-        return $this->run($this->factory->create($command), $bypassErrors);
+        return $this->run($this->factory->create($command), $bypassErrors, $listeners);
     }
 
     /**
@@ -182,16 +182,31 @@ abstract class AbstractBinary extends EventEmitter implements BinaryInterface
     /**
      * Executes a process, logs events
      *
-     * @param Process $process
-     * @param Boolean $bypassErrors Set to true to disable throwing ExecutionFailureExceptions
+     * @param Process                 $process
+     * @param Boolean                 $bypassErrors Set to true to disable throwing ExecutionFailureExceptions
+     * @param ListenerInterface|array $listeners    A listener or an array of listener to register for this unique run
      *
      * @return string The Process output
      *
      * @throws ExecutionFailureException in case of process failure.
      */
-    protected function run(Process $process, $bypassErrors = false)
+    protected function run(Process $process, $bypassErrors = false, $listeners = null)
     {
-        return $this->processRunner->run($process, $this->listenersManager->storage, $bypassErrors);
+        if (null !== $listeners) {
+            if (!is_array($listeners)) {
+                $listeners = array($listeners);
+            }
+
+            $listenersManager = clone $this->listenersManager;
+
+            foreach ($listeners as $listener) {
+                $listenersManager->register($listener, $this);
+            }
+        } else {
+            $listenersManager = $this->listenersManager;
+        }
+
+        return $this->processRunner->run($process, $listenersManager->storage, $bypassErrors);
     }
 
     private function applyProcessConfiguration()
