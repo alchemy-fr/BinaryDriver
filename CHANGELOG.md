@@ -1,7 +1,7 @@
 CHANGELOG
 ---------
 
-* 1.4.1 (2013-05-22)
+* 1.4.1 (2013-05-23)
 
   * Add third parameter to BinaryInterface::command method to pass a listener or
     an array of listener that will be registered just the time of the command.
