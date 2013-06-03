@@ -54,7 +54,7 @@ $parser->parse($driver->command(array('-a', '-l')));
 
 If you are using Nginx with PHP-fpm, executable detection may not work because of an empty `$_ENV['path']`. 
 To avoid having an empty `PATH` environment variable, add the following line to your `fastcgi_params` 
-config file (replace `/your/current/path/` with the output of `printenv PATH` :
+config file (replace `/your/current/path/` with the output of `printenv PATH`) :
 
 ```
 fastcgi_param    PATH    /your/current/path
