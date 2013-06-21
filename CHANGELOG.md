@@ -1,7 +1,7 @@
 CHANGELOG
 ---------
 
-* 1.5.0 (2013-05-23)
+* 1.5.0 (2013-06-21)
 
   * BC Break : ConfigurationInterface::get does not throw exceptions anymore
     in case the key does not exist. Second argument is a default value to return
