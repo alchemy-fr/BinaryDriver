@@ -1,6 +1,12 @@
 CHANGELOG
 ---------
 
+* 1.5.0 (2013-05-23)
+
+  * BC Break : ConfigurationInterface::get does not throw exceptions anymore
+    in case the key does not exist. Second argument is a default value to return
+    in case the key does not exist.
+
 * 1.4.1 (2013-05-23)
 
   * Add third parameter to BinaryInterface::command method to pass a listener or

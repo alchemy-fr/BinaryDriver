@@ -11,20 +11,17 @@
 
 namespace Alchemy\BinaryDriver;
 
-use Alchemy\BinaryDriver\Exception\InvalidArgumentException;
-
 interface ConfigurationInterface extends \ArrayAccess, \IteratorAggregate
 {
     /**
      * Returns the value given a key from configuration
      *
      * @param string $key
+     * @param mixed  $default The default value in case the key does not exist
      *
      * @return mixed
-     *
-     * @throws InvalidArgumentException In case the key is not defined
      */
-    public function get($key);
+    public function get($key, $default = null);
 
     /**
      * Set a value to configuration
@@ -49,8 +46,6 @@ interface ConfigurationInterface extends \ArrayAccess, \IteratorAggregate
      * @param string $key
      *
      * @return mixed The previous value
-     *
-     * @throw InvalidArgumentException In case the key is not defined
      */
     public function remove($key);
 

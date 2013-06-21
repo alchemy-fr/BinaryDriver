@@ -22,40 +22,11 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('value2', $configuration['key2']);
     }
 
-    /**
-     * @expectedException Alchemy\BinaryDriver\Exception\InvalidArgumentException
-     */
-    public function testGetOnNonExistentKeyShouldThrowAnException()
+    public function testGetOnNonExistentKeyShouldReturnDefaultValue()
     {
         $conf = new Configuration();
-        $conf->get('hooba');
-    }
-
-    /**
-     * @expectedException Alchemy\BinaryDriver\Exception\InvalidArgumentException
-     */
-    public function testRemoveOnNonExistentKeyShouldThrowAnException()
-    {
-        $conf = new Configuration();
-        $conf->remove('hooba');
-    }
-
-    /**
-     * @expectedException Alchemy\BinaryDriver\Exception\InvalidArgumentException
-     */
-    public function testArrayAccessGetOnNonExistentKeyShouldThrowAnException()
-    {
-        $conf = new Configuration();
-        $conf['hooba'];
-    }
-
-    /**
-     * @expectedException Alchemy\BinaryDriver\Exception\InvalidArgumentException
-     */
-    public function testArrayAccessRemoveOnNonExistentKeyShouldThrowAnException()
-    {
-        $conf = new Configuration();
-        unset($conf['hooba']);
+        $this->assertEquals('booba', $conf->get('hooba', 'booba'));
+        $this->assertEquals(null, $conf->get('hooba'));
     }
 
     public function testSetHasGetRemove()

@@ -11,8 +11,6 @@
 
 namespace Alchemy\BinaryDriver;
 
-use Alchemy\BinaryDriver\Exception\InvalidArgumentException;
-
 class Configuration implements ConfigurationInterface
 {
     private $data;
@@ -33,13 +31,9 @@ class Configuration implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function get($key)
+    public function get($key, $default = null)
     {
-        if (!isset($this->data[$key])) {
-            throw new InvalidArgumentException(sprintf('Key `%s` is not defined', $key));
-        }
-
-        return $this->data[$key];
+        return isset($this->data[$key]) ? $this->data[$key] : $default;
     }
 
     /**
