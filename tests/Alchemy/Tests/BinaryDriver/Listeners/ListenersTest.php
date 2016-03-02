@@ -10,7 +10,7 @@ class ListenersTest extends \PHPUnit_Framework_TestCase
 {
     public function testRegister()
     {
-        $listener = new TestListener();
+        $listener = new MockListener();
 
         $listeners = new Listeners();
         $listeners->register($listener);
@@ -39,7 +39,7 @@ class ListenersTest extends \PHPUnit_Framework_TestCase
 
     public function testRegisterAndForwardThenUnregister()
     {
-        $listener = new TestListener();
+        $listener = new MockListener();
         $target = new EventEmitter();
 
         $n = 0;
@@ -78,7 +78,7 @@ class ListenersTest extends \PHPUnit_Framework_TestCase
     }
 }
 
-class TestListener extends EventEmitter implements ListenerInterface
+class MockListener extends EventEmitter implements ListenerInterface
 {
     public function handle($type, $data)
     {

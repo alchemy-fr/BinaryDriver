@@ -12,6 +12,7 @@
 namespace Alchemy\BinaryDriver;
 
 use Alchemy\BinaryDriver\Exception\ExecutableNotFoundException;
+use Alchemy\BinaryDriver\Exception\ExecutionFailureException;
 use Alchemy\BinaryDriver\Listeners\ListenerInterface;
 use Psr\Log\LoggerInterface;
 use Evenement\EventEmitterInterface;
@@ -55,7 +56,7 @@ interface BinaryInterface extends ConfigurationAwareInterface, ProcessBuilderFac
      * Loads a binary
      *
      * @param string|array                 $binaries      A binary name or an array of binary names
-     * @param null||LoggerInterface        $logger        A Logger
+     * @param null|LoggerInterface        $logger        A Logger
      * @param array|ConfigurationInterface $configuration The configuration
      *
      * @throws ExecutableNotFoundException In case none of the binaries were found

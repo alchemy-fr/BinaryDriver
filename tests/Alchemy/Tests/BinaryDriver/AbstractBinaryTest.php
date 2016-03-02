@@ -5,6 +5,8 @@ namespace Alchemy\Tests\BinaryDriver;
 use Alchemy\BinaryDriver\AbstractBinary;
 use Alchemy\BinaryDriver\BinaryDriverTestCase;
 use Alchemy\BinaryDriver\Configuration;
+use Alchemy\BinaryDriver\Exception\ExecutableNotFoundException;
+use Alchemy\BinaryDriver\Listeners\ListenerInterface;
 use Symfony\Component\Process\ExecutableFinder;
 
 class AbstractBinaryTest extends BinaryDriverTestCase
@@ -57,19 +59,17 @@ class AbstractBinaryTest extends BinaryDriverTestCase
         $this->assertEquals($php, $imp->getProcessBuilderFactory()->getBinary());
     }
 
-    /**
-     * @expectedException Alchemy\BinaryDriver\Exception\ExecutableNotFoundException
-     */
     public function testLoadWithMultiplePathExpectingAFailure()
     {
+        $this->setExpectedException(ExecutableNotFoundException::class);
+
         Implementation::load(array('bachibouzouk', 'moribon'));
     }
 
-    /**
-     * @expectedException Alchemy\BinaryDriver\Exception\ExecutableNotFoundException
-     */
     public function testLoadWithUniquePathExpectingAFailure()
     {
+        $this->setExpectedException(ExecutableNotFoundException::class);
+
         Implementation::load('bachibouzouk');
     }
 
@@ -235,20 +235,10 @@ class AbstractBinaryTest extends BinaryDriverTestCase
 
     public function provideCommandWithListenersParameters()
     {
-        $listener = $this->getMock('Alchemy\BinaryDriver\Listeners\ListenerInterface');
-        $listener->expects($this->any())
-            ->method('forwardedEvents')
-            ->will($this->returnValue(array()));
-
-        $listener2 = $this->getMock('Alchemy\BinaryDriver\Listeners\ListenerInterface');
-        $listener2->expects($this->any())
-            ->method('forwardedEvents')
-            ->will($this->returnValue(array()));
-
         return array(
-            array('-a', false, array('-a'), 'loubda', 2, array($listener, $listener2)),
-            array('-a', false, array('-a'), 'loubda', 1, array($listener)),
-            array('-a', false, array('-a'), 'loubda', 1, $listener),
+            array('-a', false, array('-a'), 'loubda', 2, array($this->getMockListener(), $this->getMockListener())),
+            array('-a', false, array('-a'), 'loubda', 1, array($this->getMockListener())),
+            array('-a', false, array('-a'), 'loubda', 1, $this->getMockListener()),
             array('-a', false, array('-a'), 'loubda', 0, array()),
         );
     }
@@ -285,6 +275,19 @@ class AbstractBinaryTest extends BinaryDriverTestCase
         $prop->setValue($imp, $listeners);
 
         $imp->unlisten($listener);
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    private function getMockListener()
+    {
+        $listener = $this->getMock(ListenerInterface::class);
+        $listener->expects($this->any())
+            ->method('forwardedEvents')
+            ->willReturn(array());
+
+        return $listener;
     }
 }
 
