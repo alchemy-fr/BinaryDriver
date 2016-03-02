@@ -1,5 +1,8 @@
 CHANGELOG
 ---------
+* 1.6.0 (2015-03-02)
+  * BC Break: bump minimum PHP versions 
+  * Allow use of evenement v2.0 (thanks @patkar for the P/R)
 
 * 1.5.0 (2013-06-21)
 
