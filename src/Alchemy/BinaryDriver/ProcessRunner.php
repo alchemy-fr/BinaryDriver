@@ -72,7 +72,7 @@ class ProcessRunner implements ProcessRunnerInterface
             $this->doExecutionFailure($process->getCommandLine());
         } elseif (!$process->isSuccessful()) {
             $this->logger->error(sprintf(
-                '%s failed to execute command %s', $this->name, $process->getCommandLine()
+                '%s failed to execute command %s: %s', $this->name, $process->getCommandLine(), $process->getErrorOutput()
             ));
 
             return;
