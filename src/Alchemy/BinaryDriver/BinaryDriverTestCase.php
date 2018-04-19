@@ -2,20 +2,21 @@
 
 namespace Alchemy\BinaryDriver;
 
+use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Process\Process;
 
 /**
  * Convenient PHPUnit methods for testing BinaryDriverInterface implementations.
  */
-class BinaryDriverTestCase extends \PHPUnit_Framework_TestCase
+class BinaryDriverTestCase extends TestCase
 {
     /**
      * @return ProcessBuilderFactoryInterface
      */
     public function createProcessBuilderFactoryMock()
     {
-        return $this->getMock('Alchemy\BinaryDriver\ProcessBuilderFactoryInterface');
+        return $this->createMock('Alchemy\BinaryDriver\ProcessBuilderFactoryInterface');
     }
 
     /**
@@ -63,7 +64,7 @@ class BinaryDriverTestCase extends \PHPUnit_Framework_TestCase
      */
     public function createLoggerMock()
     {
-        return $this->getMock('Psr\Log\LoggerInterface');
+        return $this->createMock('Psr\Log\LoggerInterface');
     }
 
     /**
@@ -71,6 +72,6 @@ class BinaryDriverTestCase extends \PHPUnit_Framework_TestCase
      */
     public function createConfigurationMock()
     {
-        return $this->getMock('Alchemy\BinaryDriver\ConfigurationInterface');
+        return $this->createMock('Alchemy\BinaryDriver\ConfigurationInterface');
     }
 }
