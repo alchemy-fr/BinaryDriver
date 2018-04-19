@@ -4,8 +4,9 @@ namespace Alchemy\Tests\BinaryDriver;
 
 use Symfony\Component\Process\ExecutableFinder;
 use Alchemy\BinaryDriver\ProcessBuilderFactory;
+use PHPUnit\Framework\TestCase;
 
-abstract class AbstractProcessBuilderFactoryTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractProcessBuilderFactoryTest extends TestCase
 {
     public static $phpBinary;
 

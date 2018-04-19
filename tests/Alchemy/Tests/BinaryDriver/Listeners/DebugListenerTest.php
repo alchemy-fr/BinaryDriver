@@ -4,8 +4,9 @@ namespace Alchemy\Tests\BinaryDriver\Listeners;
 
 use Alchemy\BinaryDriver\Listeners\DebugListener;
 use Symfony\Component\Process\Process;
+use PHPUnit\Framework\TestCase;
 
-class DebugListenerTest extends \PHPUnit_Framework_TestCase
+class DebugListenerTest extends TestCase
 {
     public function testHandle()
     {
