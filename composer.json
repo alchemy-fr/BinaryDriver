@@ -18,6 +18,12 @@
             "name": "Phraseanet Team",
             "email": "info@alchemy.fr",
             "homepage": "http://www.phraseanet.com/"
+        },
+        {
+            "name": "Jens Hausdorf",
+            "email": "mail@jens-hausdorf.de",
+            "homepage": "https://jens-hausdorf.de",
+            "role": "Maintainer"
         }
     ],
     "require": {
