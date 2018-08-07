@@ -1,4 +1,5 @@
 <?php
+declare (strict_types = 1);
 
 /*
  * This file is part of Alchemy\BinaryDriver.
@@ -21,7 +22,7 @@ class DebugListener extends EventEmitter implements ListenerInterface
     private $eventOut;
     private $eventErr;
 
-    public function __construct($prefixOut = '[OUT] ', $prefixErr = '[ERROR] ', $eventOut = 'debug', $eventErr = 'debug')
+    public function __construct(string $prefixOut = '[OUT] ', string $prefixErr = '[ERROR] ', string $eventOut = 'debug', string $eventErr = 'debug')
     {
         $this->prefixOut = $prefixOut;
         $this->prefixErr = $prefixErr;
@@ -32,7 +33,7 @@ class DebugListener extends EventEmitter implements ListenerInterface
     /**
      * @inheritDoc
      */
-    public function handle($type, $data)
+    public function handle(string $type, string $data) : void
     {
         if (Process::ERR === $type) {
             $this->emitLines($this->eventErr, $this->prefixErr, $data);
@@ -44,15 +45,15 @@ class DebugListener extends EventEmitter implements ListenerInterface
     /**
      * @inheritDoc
      */
-    public function forwardedEvents()
+    public function forwardedEvents() : array
     {
-        return array_unique(array($this->eventErr, $this->eventOut));
+        return array_unique([$this->eventErr, $this->eventOut]);
     }
 
-    private function emitLines($event, $prefix, $lines)
+    private function emitLines(string $event, string $prefix, string $lines)
     {
         foreach (explode("\n", $lines) as $line) {
-            $this->emit($event, array($prefix . $line));
+            $this->emit($event, [$prefix . $line]);
         }
     }
 }

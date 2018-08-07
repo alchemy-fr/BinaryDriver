@@ -1,4 +1,4 @@
-<?php
+<?php declare (strict_types = 1);
 
 /*
  * This file is part of Alchemy\BinaryDriver.
@@ -123,7 +123,7 @@ class ProcessRunnerTest extends BinaryDriverTestCase
             ->expects($this->once())
             ->method('info');
 
-        $this->assertNull($runner->run($process, new \SplObjectStorage(), true));
+        $this->assertSame('', $runner->run($process, new \SplObjectStorage(), true));
     }
 
     public function testRunFailingProcessWithExceptionBypassingErrors()
@@ -146,7 +146,7 @@ class ProcessRunnerTest extends BinaryDriverTestCase
             ->expects($this->once())
             ->method('info');
 
-        $this->assertNull($runner->run($process, new \SplObjectStorage(), true));
+        $this->assertSame('', $runner->run($process, new \SplObjectStorage(), true));
     }
 
     public function testRunSuccessFullProcessWithHandlers()
@@ -196,12 +196,18 @@ class ProcessRunnerTest extends BinaryDriverTestCase
 
 class TestListener extends EventEmitter implements ListenerInterface
 {
-    public function handle($type, $data)
+    /**
+     * @inheritDoc
+     */
+    public function handle(string $type, string $data) : void
     {
-        return $this->emit('received', array($type, $data));
+        $this->emit('received', [$type, $data]);
     }
 
-    public function forwardedEvents()
+    /**
+     * @inheritDoc
+     */
+    public function forwardedEvents() : array
     {
         return [];
     }

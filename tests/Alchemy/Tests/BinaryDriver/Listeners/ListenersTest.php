@@ -1,4 +1,4 @@
-<?php
+<?php declare (strict_types = 1);
 
 namespace Alchemy\Tests\BinaryDriver\Listeners;
 
@@ -81,13 +81,19 @@ class ListenersTest extends TestCase
 
 class MockListener extends EventEmitter implements ListenerInterface
 {
-    public function handle($type, $data)
+    /**
+     * @inheritDoc
+     */
+    public function handle(string $type, string $data) : void
     {
         $this->emit('received', array($type, $data));
     }
 
-    public function forwardedEvents()
+    /**
+     * @inheritDoc
+     */
+    public function forwardedEvents() : array
     {
-        return array('received');
+        return ['received'];
     }
 }

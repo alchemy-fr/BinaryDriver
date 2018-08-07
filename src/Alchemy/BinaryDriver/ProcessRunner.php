@@ -1,4 +1,5 @@
 <?php
+declare (strict_types = 1);
 
 /*
  * This file is part of Alchemy\BinaryDriver.
@@ -25,7 +26,7 @@ class ProcessRunner implements ProcessRunnerInterface
     /** @var string */
     private $name;
 
-    public function __construct(LoggerInterface $logger, $name)
+    public function __construct(LoggerInterface $logger, string $name)
     {
         $this->logger = $logger;
         $this->name = $name;
@@ -33,20 +34,16 @@ class ProcessRunner implements ProcessRunnerInterface
 
     /**
      * @inheritDoc
-     *
-     * @return ProcessRunner
      */
-    public function setLogger(LoggerInterface $logger)
+    public function setLogger(LoggerInterface $logger) : void
     {
         $this->logger = $logger;
-
-        return $this;
     }
 
     /**
      * @return LoggerInterface
      */
-    public function getLogger()
+    public function getLogger() : LoggerInterface
     {
         return $this->logger;
     }
@@ -54,7 +51,7 @@ class ProcessRunner implements ProcessRunnerInterface
     /**
      * @inheritDoc
      */
-    public function run(Process $process, SplObjectStorage $listeners, $bypassErrors)
+    public function run(Process $process, SplObjectStorage $listeners, bool $bypassErrors = false) : string
     {
         $this->logger->info(sprintf(
             '%s running command %s',
@@ -80,7 +77,7 @@ class ProcessRunner implements ProcessRunnerInterface
                 $process->getErrorOutput()
             ));
 
-            return;
+            return "";
         } else {
             $this->logger->info(sprintf('%s executed command successfully', $this->name));
 
@@ -97,7 +94,12 @@ class ProcessRunner implements ProcessRunnerInterface
         };
     }
 
-    private function doExecutionFailure($command, \Exception $e = null)
+    /**
+     * @throws ExecutionFailureException
+     *
+     * @return void
+     */
+    private function doExecutionFailure(? string $command, \Throwable $e = null) : void
     {
         $this->logger->error(sprintf(
             '%s failed to execute command %s',
@@ -108,6 +110,6 @@ class ProcessRunner implements ProcessRunnerInterface
             '%s failed to execute command %s',
             $this->name,
             $command
-        ), $e ? $e->getCode() : null, $e ? : null);
+        ), $e ? $e->getCode() : 0, $e);
     }
 }

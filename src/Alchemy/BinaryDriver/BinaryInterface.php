@@ -1,4 +1,5 @@
 <?php
+declare (strict_types = 1);
 
 /*
  * This file is part of Alchemy\BinaryDriver.
@@ -26,7 +27,7 @@ interface BinaryInterface extends ConfigurationAwareInterface, ProcessBuilderFac
      *
      * @return BinaryInterface
      */
-    public function listen(ListenerInterface $listener);
+    public function listen(ListenerInterface $listener) : self;
 
     /**
      * Removes a listener from the binary driver
@@ -35,7 +36,7 @@ interface BinaryInterface extends ConfigurationAwareInterface, ProcessBuilderFac
      *
      * @return BinaryInterface
      */
-    public function unlisten(ListenerInterface $listener);
+    public function unlisten(ListenerInterface $listener) : self;
 
     /**
      * Runs a command against the driver.
@@ -50,7 +51,7 @@ interface BinaryInterface extends ConfigurationAwareInterface, ProcessBuilderFac
      *
      * @throws ExecutionFailureException in case of process failure.
      */
-    public function command($command, $bypassErrors = false, $listeners = null);
+    public function command($command, bool $bypassErrors = false, $listeners = null) : string;
 
     /**
      * Loads a binary
@@ -63,5 +64,5 @@ interface BinaryInterface extends ConfigurationAwareInterface, ProcessBuilderFac
      *
      * @return BinaryInterface
      */
-    public static function load($binaries, LoggerInterface $logger = null, $configuration = []);
+    public static function load($binaries, LoggerInterface $logger = null, $configuration = []) : BinaryInterface;
 }

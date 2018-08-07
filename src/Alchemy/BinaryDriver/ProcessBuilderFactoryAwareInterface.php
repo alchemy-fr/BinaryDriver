@@ -1,4 +1,5 @@
 <?php
+declare (strict_types = 1);
 
 /*
  * This file is part of Alchemy\BinaryDriver.
@@ -18,12 +19,12 @@ interface ProcessBuilderFactoryAwareInterface
      *
      * @return ProcessBuilderFactoryInterface
      */
-    public function getProcessBuilderFactory();
+    public function getProcessBuilderFactory() : ProcessBuilderFactoryInterface;
 
     /**
      * Set a process builder factory
      *
      * @param ProcessBuilderFactoryInterface $factory
      */
-    public function setProcessBuilderFactory(ProcessBuilderFactoryInterface $factory);
+    public function setProcessBuilderFactory(ProcessBuilderFactoryInterface $factory) : ProcessBuilderFactoryAwareInterface;
 }

@@ -1,4 +1,5 @@
 <?php
+declare (strict_types = 1);
 
 /*
  * This file is part of Alchemy\BinaryDriver.
@@ -20,13 +21,15 @@ interface ListenerInterface extends EventEmitterInterface
      *
      * @param string $type The data type, one of Process::ERR, Process::OUT constants
      * @param string $data The output
+     *
+     * @return void
      */
-    public function handle($type, $data);
+    public function handle(string $type, string $data) : void;
 
     /**
      * An array of events that should be forwarded to BinaryInterface
      *
-     * @return array
+     * @return string[]
      */
-    public function forwardedEvents();
+    public function forwardedEvents() : array;
 }

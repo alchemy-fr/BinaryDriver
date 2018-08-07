@@ -1,4 +1,5 @@
 <?php
+declare (strict_types = 1);
 
 /*
  * This file is part of Alchemy\BinaryDriver.
@@ -48,7 +49,7 @@ abstract class AbstractBinary extends EventEmitter implements BinaryInterface
     /**
      * @inheritDoc
      */
-    public function listen(ListenerInterface $listener)
+    public function listen(ListenerInterface $listener) : BinaryInterface
     {
         $this->listenersManager->register($listener, $this);
 
@@ -58,7 +59,7 @@ abstract class AbstractBinary extends EventEmitter implements BinaryInterface
     /**
      * @inheritDoc
      */
-    public function unlisten(ListenerInterface $listener)
+    public function unlisten(ListenerInterface $listener) : BinaryInterface
     {
         $this->listenersManager->unregister($listener, $this);
 
@@ -68,17 +69,15 @@ abstract class AbstractBinary extends EventEmitter implements BinaryInterface
     /**
      * @inheritDoc
      */
-    public function getConfiguration()
+    public function getConfiguration() : ConfigurationInterface
     {
         return $this->configuration;
     }
 
     /**
      * @inheritDoc
-     *
-     * @return BinaryInterface
      */
-    public function setConfiguration(ConfigurationInterface $configuration)
+    public function setConfiguration(ConfigurationInterface $configuration) : ConfigurationAwareInterface
     {
         $this->configuration = $configuration;
         $this->applyProcessConfiguration();
@@ -89,7 +88,7 @@ abstract class AbstractBinary extends EventEmitter implements BinaryInterface
     /**
      * @inheritDoc
      */
-    public function getProcessBuilderFactory()
+    public function getProcessBuilderFactory() : ProcessBuilderFactoryInterface
     {
         return $this->factory;
     }
@@ -97,9 +96,9 @@ abstract class AbstractBinary extends EventEmitter implements BinaryInterface
     /**
      * @inheritDoc
      *
-     * @return BinaryInterface
+     * @return ProcessBuilderFactoryAwareInterface
      */
-    public function setProcessBuilderFactory(ProcessBuilderFactoryInterface $factory)
+    public function setProcessBuilderFactory(ProcessBuilderFactoryInterface $factory) : ProcessBuilderFactoryAwareInterface
     {
         $this->factory = $factory;
         $this->applyProcessConfiguration();
@@ -110,7 +109,7 @@ abstract class AbstractBinary extends EventEmitter implements BinaryInterface
     /**
      * @inheritDoc
      */
-    public function getProcessRunner()
+    public function getProcessRunner() : ProcessRunnerInterface
     {
         return $this->processRunner;
     }
@@ -118,17 +117,15 @@ abstract class AbstractBinary extends EventEmitter implements BinaryInterface
     /**
      * @inheritDoc
      */
-    public function setProcessRunner(ProcessRunnerInterface $runner)
+    public function setProcessRunner(ProcessRunnerInterface $runner) : void
     {
         $this->processRunner = $runner;
-
-        return $this;
     }
 
     /**
      * @inheritDoc
      */
-    public function command($command, $bypassErrors = false, $listeners = null)
+    public function command($command, bool $bypassErrors = false, $listeners = null) : string
     {
         if (!is_array($command)) {
             $command = (array)$command;
@@ -140,11 +137,11 @@ abstract class AbstractBinary extends EventEmitter implements BinaryInterface
     /**
      * @inheritDoc
      */
-    public static function load($binaries, LoggerInterface $logger = null, $configuration = [])
+    public static function load($binaries, ? LoggerInterface $logger = null, $configuration = []) : BinaryInterface
     {
         $finder = new ExecutableFinder();
         $binary = null;
-        $binaries = is_array($binaries) ? $binaries : array($binaries);
+        $binaries = is_array($binaries) ? $binaries : (array)$binaries;
 
         foreach ($binaries as $candidate) {
             if (file_exists($candidate) && is_executable($candidate)) {

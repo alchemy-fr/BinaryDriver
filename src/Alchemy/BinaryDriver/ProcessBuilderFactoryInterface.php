@@ -1,4 +1,5 @@
 <?php
+declare (strict_types = 1);
 
 /*
  * This file is part of Alchemy\BinaryDriver.
@@ -25,25 +26,25 @@ interface ProcessBuilderFactoryInterface
      *
      * @throws InvalidArgumentException
      */
-    public function create($arguments = []);
+    public function create($arguments = []) : Process;
 
     /**
      * Returns the path to the binary that is used
      *
-     * @return String
+     * @return string
      */
-    public function getBinary();
+    public function getBinary() : string;
 
     /**
      * Sets the path to the binary
      *
-     * @param String $binary A path to a binary
+     * @param string $binary A path to a binary
      *
      * @return ProcessBuilderFactoryInterface
      *
      * @throws InvalidArgumentException In case binary is not executable
      */
-    public function useBinary($binary);
+    public function useBinary(string $binary) : ProcessBuilderFactoryInterface;
 
     /**
      * Set the default timeout to apply on created processes.

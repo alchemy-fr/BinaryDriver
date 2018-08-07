@@ -1,4 +1,5 @@
 <?php
+declare (strict_types = 1);
 
 /*
  * This file is part of Alchemy\BinaryDriver.
@@ -21,13 +22,13 @@ interface ProcessRunnerInterface extends LoggerAwareInterface
     /**
      * Executes a process, logs events
      *
-     * @param Process          $process
-     * @param SplObjectStorage $listeners    Some listeners
-     * @param bool          $bypassErrors Set to true to disable throwing ExecutionFailureExceptions
+     * @param Process           $process
+     * @param SplObjectStorage  $listeners    Some listeners
+     * @param bool              $bypassErrors Set to true to disable throwing ExecutionFailureExceptions
      *
      * @return string The Process output
      *
      * @throws ExecutionFailureException in case of process failure.
      */
-    public function run(Process $process, SplObjectStorage $listeners, $bypassErrors);
+    public function run(Process $process, SplObjectStorage $listeners, bool $bypassErrors) : string;
 }

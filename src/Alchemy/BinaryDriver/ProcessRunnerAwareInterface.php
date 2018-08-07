@@ -1,4 +1,5 @@
 <?php
+declare (strict_types = 1);
 
 /*
  * This file is part of Alchemy\BinaryDriver.
@@ -18,12 +19,14 @@ interface ProcessRunnerAwareInterface
      *
      * @return ProcessRunnerInterface
      */
-    public function getProcessRunner();
+    public function getProcessRunner() : ProcessRunnerInterface;
 
     /**
      * Sets a process runner
      *
      * @param ProcessRunnerInterface $runner
+     *
+     * @return void
      */
-    public function setProcessRunner(ProcessRunnerInterface $runner);
+    public function setProcessRunner(ProcessRunnerInterface $runner) : void;
 }

@@ -1,4 +1,5 @@
 <?php
+declare (strict_types = 1);
 
 namespace Alchemy\BinaryDriver;
 
@@ -25,10 +26,11 @@ class BinaryDriverTestCase extends TestCase
      * @param string  $commandLine The commandline executed
      * @param string  $output      The process output
      * @param string  $error       The process error output
+     * @param bool $enableCallback
      *
      * @return Process
      */
-    public function createProcessMock($runs = 1, $success = true, $commandLine = null, $output = null, $error = null, $callback = false)
+    public function createProcessMock(int $runs = 1, bool $success = true, string $commandLine = null, string $output = null, string $error = null, bool $enableCallback = false)
     {
         $process = $this->getMockBuilder(\Symfony\Component\Process\Process::class)
             ->disableOriginalConstructor()
@@ -37,7 +39,7 @@ class BinaryDriverTestCase extends TestCase
         $builder = $process->expects($this->exactly($runs))
             ->method('run');
 
-        if (true === $callback) {
+        if (true === $enableCallback) {
             $builder->with($this->isInstanceOf('Closure'));
         }
 

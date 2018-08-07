@@ -1,4 +1,5 @@
 <?php
+declare (strict_types = 1);
 
 /*
  * This file is part of Alchemy\BinaryDriver.
@@ -52,11 +53,11 @@ class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
     /**
      * Constructor
      *
-     * @param String $binary The path to the binary
+     * @param string $binary The path to the binary
      *
      * @throws InvalidArgumentException In case binary path is invalid
      */
-    public function __construct($binary)
+    public function __construct(string $binary)
     {
         $this->detectEmulation();
 
@@ -91,17 +92,17 @@ class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getBinary()
+    public function getBinary() : string
     {
         return $this->binary;
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function useBinary($binary)
+    public function useBinary(string $binary) : ProcessBuilderFactoryInterface
     {
         if (!is_executable($binary)) {
             throw new InvalidArgumentException(sprintf('`%s` is not an executable binary', $binary));
@@ -117,7 +118,7 @@ class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function setTimeout($timeout)
     {
@@ -131,7 +132,7 @@ class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function getTimeout()
     {
@@ -139,9 +140,9 @@ class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function create($arguments = [])
+    public function create($arguments = []) : Process
     {
         if (null === $this->binary) {
             throw new InvalidArgumentException('No binary set');

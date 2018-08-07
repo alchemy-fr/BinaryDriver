@@ -1,4 +1,5 @@
 <?php
+declare (strict_types = 1);
 
 /*
  * This file is part of Alchemy\BinaryDriver.
@@ -18,12 +19,14 @@ interface ConfigurationAwareInterface
      *
      * @return ConfigurationInterface
      */
-    public function getConfiguration();
+    public function getConfiguration() : ConfigurationInterface;
 
     /**
      * Set the configuration
      *
      * @param ConfigurationInterface $configuration
+     *
+     * @return ConfigurationAwareInterface
      */
-    public function setConfiguration(ConfigurationInterface $configuration);
+    public function setConfiguration(ConfigurationInterface $configuration) : ConfigurationAwareInterface;
 }

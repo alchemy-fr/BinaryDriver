@@ -1,4 +1,5 @@
 <?php
+declare (strict_types = 1);
 
 namespace Alchemy\BinaryDriver\Listeners;
 
@@ -30,7 +31,7 @@ class Listeners extends EventEmitter
      *
      * @return ListenersInterface
      */
-    public function register(ListenerInterface $listener, EventEmitter $target = null)
+    public function register(ListenerInterface $listener, EventEmitter $target = null) : self
     {
         $EElisteners = [];
 
@@ -52,7 +53,7 @@ class Listeners extends EventEmitter
      *
      * @throws InvalidArgumentException In case the listener is not registered
      */
-    public function unregister(ListenerInterface $listener)
+    public function unregister(ListenerInterface $listener) : self
     {
         if (!isset($this->storage[$listener])) {
             throw new InvalidArgumentException('Listener is not registered.');
@@ -67,7 +68,7 @@ class Listeners extends EventEmitter
         return $this;
     }
 
-    private function forwardEvents($source, $target, array $events)
+    private function forwardEvents(ListenerInterface $source, EventEmitter $target, array $events) : array
     {
         $EElisteners = [];
 
@@ -79,7 +80,7 @@ class Listeners extends EventEmitter
         return $EElisteners;
     }
 
-    private function createListener($event, $target)
+    private function createListener(string $event, EventEmitter $target) : callable
     {
         return function () use ($event, $target) {
             $target->emit($event, func_get_args());

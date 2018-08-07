@@ -1,4 +1,5 @@
 <?php
+declare (strict_types = 1);
 
 /*
  * This file is part of Alchemy\BinaryDriver.
@@ -21,7 +22,7 @@ interface ConfigurationInterface extends \ArrayAccess, \IteratorAggregate
      *
      * @return mixed
      */
-    public function get($key, $default = null);
+    public function get(string $key, $default = null);
 
     /**
      * Set a value to configuration
@@ -29,7 +30,7 @@ interface ConfigurationInterface extends \ArrayAccess, \IteratorAggregate
      * @param string $key   The key
      * @param mixed  $value The value corresponding to the key
      */
-    public function set($key, $value);
+    public function set(string $key, $value);
 
     /**
      * Tells if Configuration contains `$key`
@@ -38,7 +39,7 @@ interface ConfigurationInterface extends \ArrayAccess, \IteratorAggregate
      *
      * @return bool
      */
-    public function has($key);
+    public function has(string $key) : bool;
 
     /**
      * Removes a value given a key
@@ -47,12 +48,12 @@ interface ConfigurationInterface extends \ArrayAccess, \IteratorAggregate
      *
      * @return mixed The previous value
      */
-    public function remove($key);
+    public function remove(string $key);
 
     /**
      * Returns all values set in the configuration
      *
-     * @return array
+     * @return mixed[]
      */
-    public function all();
+    public function all() : array;
 }
