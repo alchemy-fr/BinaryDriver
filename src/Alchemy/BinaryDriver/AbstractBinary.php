@@ -184,7 +184,7 @@ abstract class AbstractBinary extends EventEmitter implements BinaryInterface
      * Executes a process, logs events
      *
      * @param Process                 $process
-     * @param Boolean                 $bypassErrors Set to true to disable throwing ExecutionFailureExceptions
+     * @param bool                 $bypassErrors Set to true to disable throwing ExecutionFailureExceptions
      * @param ListenerInterface|array $listeners    A listener or an array of listener to register for this unique run
      *
      * @return string The Process output

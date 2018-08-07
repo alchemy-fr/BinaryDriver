@@ -23,7 +23,7 @@ interface ProcessRunnerInterface extends LoggerAwareInterface
      *
      * @param Process          $process
      * @param SplObjectStorage $listeners    Some listeners
-     * @param Boolean          $bypassErrors Set to true to disable throwing ExecutionFailureExceptions
+     * @param bool          $bypassErrors Set to true to disable throwing ExecutionFailureExceptions
      *
      * @return string The Process output
      *

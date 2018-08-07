@@ -21,7 +21,7 @@ class BinaryDriverTestCase extends TestCase
 
     /**
      * @param integer $runs        The number of runs expected
-     * @param Boolean $success     True if the process expects to be successfull
+     * @param bool $success     True if the process expects to be successfull
      * @param string  $commandLine The commandline executed
      * @param string  $output      The process output
      * @param string  $error       The process error output

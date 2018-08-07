@@ -16,12 +16,15 @@ abstract class AbstractProcessBuilderFactoryTest extends TestCase
      */
     abstract protected function getProcessBuilderFactory($binary);
 
-    public function setUp()
+    public function setUp() : void
     {
         ProcessBuilderFactory::$emulateSfLTS = null;
         if (null === static::$phpBinary) {
-            $this->markTestSkipped('Unable to detect php binary, skipping');
+            $this->markTestSkipped('Unable to detect php binary, skipping.');
+            return;
         }
+
+        parent::setUp();
     }
 
     public static function setUpBeforeClass()
@@ -59,15 +62,21 @@ abstract class AbstractProcessBuilderFactoryTest extends TestCase
         $factory->useBinary('itissureitdoesnotexist');
     }
 
+    /**
+     * @requires OS Linux
+     */
     public function testCreateShouldReturnAProcess()
     {
         $factory = $this->getProcessBuilderFactory(static::$phpBinary);
         $process = $factory->create();
 
-        $this->assertInstanceOf('Symfony\Component\Process\Process', $process);
+        $this->assertInstanceOf(\Symfony\Component\Process\Process::class, $process);
         $this->assertEquals("'" . static::$phpBinary . "'", $process->getCommandLine());
     }
 
+    /**
+     * @requires OS Linux
+     */
     public function testCreateWithStringArgument()
     {
         $factory = $this->getProcessBuilderFactory(static::$phpBinary);
@@ -77,6 +86,9 @@ abstract class AbstractProcessBuilderFactoryTest extends TestCase
         $this->assertEquals("'" . static::$phpBinary . "' '-v'", $process->getCommandLine());
     }
 
+    /**
+     * @requires OS Linux
+     */
     public function testCreateWithArrayArgument()
     {
         $factory = $this->getProcessBuilderFactory(static::$phpBinary);
@@ -92,7 +104,7 @@ abstract class AbstractProcessBuilderFactoryTest extends TestCase
         $factory->setTimeout(200);
         $process = $factory->create(['-i']);
 
-        $this->assertInstanceOf('Symfony\Component\Process\Process', $process);
+        $this->assertInstanceOf(\Symfony\Component\Process\Process::class, $process);
         $this->assertEquals(200, $process->getTimeout());
     }
 }

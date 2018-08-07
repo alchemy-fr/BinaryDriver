@@ -13,7 +13,6 @@ namespace Alchemy\BinaryDriver;
 
 use Alchemy\BinaryDriver\Exception\InvalidArgumentException;
 use Symfony\Component\Process\Process;
-use Symfony\Component\Process\ProcessBuilder;
 
 class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
 {
@@ -37,7 +36,7 @@ class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
      * Note that this one is used only if Symfony ProcessBuilder has method
      * setPrefix (2.3)
      *
-     * @var ProcessBuilder
+     * @var Process
      */
     private $builder;
 
@@ -46,7 +45,7 @@ class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
      *
      * This symfony version provided a brand new ::setPrefix method.
      *
-     * @var Boolean
+     * @var bool
      */
     public static $emulateSfLTS;
 
@@ -62,7 +61,7 @@ class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
         $this->detectEmulation();
 
         if (!self::$emulateSfLTS) {
-            $this->builder = new ProcessBuilder();
+            $this->builder = new Process();
         }
 
         $this->useBinary($binary);
@@ -149,7 +148,7 @@ class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
         }
 
         if (!is_array($arguments)) {
-            $arguments = array($arguments);
+            $arguments = (array)$arguments;
         }
 
         if (static::$emulateSfLTS) {
@@ -179,7 +178,7 @@ class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
             return $this;
         }
 
-        static::$emulateSfLTS = !method_exists('Symfony\Component\Process\ProcessBuilder', 'setPrefix');
+        static::$emulateSfLTS = !method_exists('Symfony\Component\Process\Process', 'setPrefix');
 
         return $this;
     }
