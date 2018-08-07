@@ -142,7 +142,7 @@ class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
     /**
      * @inheritdoc
      */
-    public function create($arguments = array())
+    public function create($arguments = [])
     {
         if (null === $this->binary) {
             throw new InvalidArgumentException('No binary set');

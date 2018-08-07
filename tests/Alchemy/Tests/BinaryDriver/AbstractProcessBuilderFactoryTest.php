@@ -4,8 +4,9 @@ namespace Alchemy\Tests\BinaryDriver;
 
 use Symfony\Component\Process\ExecutableFinder;
 use Alchemy\BinaryDriver\ProcessBuilderFactory;
+use PHPUnit\Framework\TestCase;
 
-abstract class AbstractProcessBuilderFactoryTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractProcessBuilderFactoryTest extends TestCase
 {
     public static $phpBinary;
 
@@ -64,7 +65,7 @@ abstract class AbstractProcessBuilderFactoryTest extends \PHPUnit_Framework_Test
         $process = $factory->create();
 
         $this->assertInstanceOf('Symfony\Component\Process\Process', $process);
-        $this->assertEquals("'".static::$phpBinary."'", $process->getCommandLine());
+        $this->assertEquals("'" . static::$phpBinary . "'", $process->getCommandLine());
     }
 
     public function testCreateWithStringArgument()
@@ -72,24 +73,24 @@ abstract class AbstractProcessBuilderFactoryTest extends \PHPUnit_Framework_Test
         $factory = $this->getProcessBuilderFactory(static::$phpBinary);
         $process = $factory->create('-v');
 
-        $this->assertInstanceOf('Symfony\Component\Process\Process', $process);
-        $this->assertEquals("'".static::$phpBinary."' '-v'", $process->getCommandLine());
+        $this->assertInstanceOf(\Symfony\Component\Process\Process::class, $process);
+        $this->assertEquals("'" . static::$phpBinary . "' '-v'", $process->getCommandLine());
     }
 
     public function testCreateWithArrayArgument()
     {
         $factory = $this->getProcessBuilderFactory(static::$phpBinary);
-        $process = $factory->create(array('-r', 'echo "Hello !";'));
+        $process = $factory->create(['-r', 'echo "Hello !";']);
 
-        $this->assertInstanceOf('Symfony\Component\Process\Process', $process);
-        $this->assertEquals("'".static::$phpBinary."' '-r' 'echo \"Hello !\";'", $process->getCommandLine());
+        $this->assertInstanceOf(\Symfony\Component\Process\Process::class, $process);
+        $this->assertEquals("'" . static::$phpBinary . "' '-r' 'echo \"Hello !\";'", $process->getCommandLine());
     }
 
     public function testCreateWithTimeout()
     {
         $factory = $this->getProcessBuilderFactory(static::$phpBinary);
         $factory->setTimeout(200);
-        $process = $factory->create(array('-i'));
+        $process = $factory->create(['-i']);
 
         $this->assertInstanceOf('Symfony\Component\Process\Process', $process);
         $this->assertEquals(200, $process->getTimeout());

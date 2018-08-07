@@ -25,7 +25,7 @@ interface ProcessBuilderFactoryInterface
      *
      * @throws InvalidArgumentException
      */
-    public function create($arguments = array());
+    public function create($arguments = []);
 
     /**
      * Returns the path to the binary that is used

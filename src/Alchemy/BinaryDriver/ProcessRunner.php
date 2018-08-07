@@ -32,7 +32,7 @@ class ProcessRunner implements ProcessRunnerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      *
      * @return ProcessRunner
      */
@@ -52,12 +52,14 @@ class ProcessRunner implements ProcessRunnerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function run(Process $process, SplObjectStorage $listeners, $bypassErrors)
     {
         $this->logger->info(sprintf(
-            '%s running command %s', $this->name, $process->getCommandLine()
+            '%s running command %s',
+            $this->name,
+            $process->getCommandLine()
         ));
 
         try {
@@ -72,7 +74,10 @@ class ProcessRunner implements ProcessRunnerInterface
             $this->doExecutionFailure($process->getCommandLine());
         } elseif (!$process->isSuccessful()) {
             $this->logger->error(sprintf(
-                '%s failed to execute command %s: %s', $this->name, $process->getCommandLine(), $process->getErrorOutput()
+                '%s failed to execute command %s: %s',
+                $this->name,
+                $process->getCommandLine(),
+                $process->getErrorOutput()
             ));
 
             return;
@@ -95,10 +100,14 @@ class ProcessRunner implements ProcessRunnerInterface
     private function doExecutionFailure($command, \Exception $e = null)
     {
         $this->logger->error(sprintf(
-            '%s failed to execute command %s', $this->name, $command
+            '%s failed to execute command %s',
+            $this->name,
+            $command
         ));
         throw new ExecutionFailureException(sprintf(
-            '%s failed to execute command %s', $this->name, $command
-        ), $e ? $e->getCode() : null, $e ?: null);
+            '%s failed to execute command %s',
+            $this->name,
+            $command
+        ), $e ? $e->getCode() : null, $e ? : null);
     }
 }

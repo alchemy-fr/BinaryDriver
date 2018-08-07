@@ -15,13 +15,13 @@ class Configuration implements ConfigurationInterface
 {
     private $data;
 
-    public function __construct(array $data = array())
+    public function __construct(array $data = [])
     {
         $this->data = $data;
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function getIterator()
     {
@@ -29,7 +29,7 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function get($key, $default = null)
     {
@@ -37,7 +37,7 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function set($key, $value)
     {
@@ -47,7 +47,7 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function has($key)
     {
@@ -55,7 +55,7 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function remove($key)
     {
@@ -66,7 +66,7 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function all()
     {
@@ -74,7 +74,7 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function offsetExists($offset)
     {
@@ -82,7 +82,7 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function offsetGet($offset)
     {
@@ -90,7 +90,7 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function offsetSet($offset, $value)
     {
@@ -98,7 +98,7 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function offsetUnset($offset)
     {

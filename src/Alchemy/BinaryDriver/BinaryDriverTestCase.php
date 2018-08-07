@@ -4,18 +4,19 @@ namespace Alchemy\BinaryDriver;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Process\Process;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Convenient PHPUnit methods for testing BinaryDriverInterface implementations.
  */
-class BinaryDriverTestCase extends \PHPUnit_Framework_TestCase
+class BinaryDriverTestCase extends TestCase
 {
     /**
      * @return ProcessBuilderFactoryInterface
      */
     public function createProcessBuilderFactoryMock()
     {
-        return $this->getMock('Alchemy\BinaryDriver\ProcessBuilderFactoryInterface');
+        return $this->getMockBuilder(\Alchemy\BinaryDriver\ProcessBuilderFactoryInterface::class)->getMock();
     }
 
     /**
@@ -29,7 +30,7 @@ class BinaryDriverTestCase extends \PHPUnit_Framework_TestCase
      */
     public function createProcessMock($runs = 1, $success = true, $commandLine = null, $output = null, $error = null, $callback = false)
     {
-        $process = $this->getMockBuilder('Symfony\Component\Process\Process')
+        $process = $this->getMockBuilder(\Symfony\Component\Process\Process::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -44,11 +45,11 @@ class BinaryDriverTestCase extends \PHPUnit_Framework_TestCase
             ->method('isSuccessful')
             ->will($this->returnValue($success));
 
-        foreach (array(
+        foreach ([
             'getOutput' => $output,
             'getErrorOutput' => $error,
             'getCommandLine' => $commandLine,
-        ) as $command => $value) {
+        ] as $command => $value) {
             $process
                 ->expects($this->any())
                 ->method($command)
@@ -63,7 +64,7 @@ class BinaryDriverTestCase extends \PHPUnit_Framework_TestCase
      */
     public function createLoggerMock()
     {
-        return $this->getMock('Psr\Log\LoggerInterface');
+        return $this->getMockBuilder(\Psr\Log\LoggerInterface::class)->getMock();
     }
 
     /**
@@ -71,6 +72,6 @@ class BinaryDriverTestCase extends \PHPUnit_Framework_TestCase
      */
     public function createConfigurationMock()
     {
-        return $this->getMock('Alchemy\BinaryDriver\ConfigurationInterface');
+        return $this->getMockBuilder(\Alchemy\BinaryDriver\ConfigurationInterface::class)->getMock();
     }
 }

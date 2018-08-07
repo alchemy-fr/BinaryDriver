@@ -47,13 +47,13 @@ $parser = new LsParser();
 
 $driver = Driver::load('ls');
 // will return the output of `ls -a -l`
-$parser->parse($driver->command(array('-a', '-l')));
+$parser->parse($driver->command(['-a', '-l']));
 ```
 
 ### Binary detection troubleshooting
 
-If you are using Nginx with PHP-fpm, executable detection may not work because of an empty `$_ENV['path']`. 
-To avoid having an empty `PATH` environment variable, add the following line to your `fastcgi_params` 
+If you are using Nginx with PHP-fpm, executable detection may not work because of an empty `$_ENV['path']`.
+To avoid having an empty `PATH` environment variable, add the following line to your `fastcgi_params`
 config file (replace `/your/current/path/` with the output of `printenv PATH`) :
 
 ```
@@ -84,14 +84,14 @@ class DebugListener extends EventEmitter implements ListenerInterface
     public function handle($type, $data)
     {
         foreach (explode(PHP_EOL, $data) as $line) {
-            $this->emit($type === Process::ERR ? 'error' : 'out', array($line));
+            $this->emit($type === Process::ERR ? 'error' : 'out', [$line]);
         }
     }
 
-    public function forwardedEvents()
+    public function forwardedEvents(): array
     {
         // forward 'error' events to the BinaryInterface
-        return array('error');
+        return ['error'];
     }
 }
 
@@ -142,7 +142,7 @@ $process = $factory->create('-v');
 // echoes '/usr/bin/php' '-v'
 echo $process->getCommandLine();
 
-$process = $factory->create(array('-r', 'echo "Hello !";'));
+$process = $factory->create(['-r', 'echo "Hello !";']);
 
 // echoes '/usr/bin/php' '-r' 'echo "Hello !";'
 echo $process->getCommandLine();
@@ -156,7 +156,7 @@ interface.
 ```php
 use Alchemy\BinaryDriver\Configuration;
 
-$conf = new Configuration(array('timeout' => 0));
+$conf = new Configuration(['timeout' => 0]);
 
 echo $conf->get('timeout');
 
@@ -174,7 +174,7 @@ Same example using the `ArrayAccess` interface :
 ```php
 use Alchemy\BinaryDriver\Configuration;
 
-$conf = new Configuration(array('timeout' => 0));
+$conf = new Configuration(['timeout' => 0]);
 
 echo $conf['timeout'];
 

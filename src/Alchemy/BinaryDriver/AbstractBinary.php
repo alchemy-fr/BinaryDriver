@@ -46,7 +46,7 @@ abstract class AbstractBinary extends EventEmitter implements BinaryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function listen(ListenerInterface $listener)
     {
@@ -56,7 +56,7 @@ abstract class AbstractBinary extends EventEmitter implements BinaryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function unlisten(ListenerInterface $listener)
     {
@@ -66,7 +66,7 @@ abstract class AbstractBinary extends EventEmitter implements BinaryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function getConfiguration()
     {
@@ -74,7 +74,7 @@ abstract class AbstractBinary extends EventEmitter implements BinaryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      *
      * @return BinaryInterface
      */
@@ -87,7 +87,7 @@ abstract class AbstractBinary extends EventEmitter implements BinaryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function getProcessBuilderFactory()
     {
@@ -95,7 +95,7 @@ abstract class AbstractBinary extends EventEmitter implements BinaryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      *
      * @return BinaryInterface
      */
@@ -108,7 +108,7 @@ abstract class AbstractBinary extends EventEmitter implements BinaryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function getProcessRunner()
     {
@@ -116,7 +116,7 @@ abstract class AbstractBinary extends EventEmitter implements BinaryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function setProcessRunner(ProcessRunnerInterface $runner)
     {
@@ -126,21 +126,21 @@ abstract class AbstractBinary extends EventEmitter implements BinaryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function command($command, $bypassErrors = false, $listeners = null)
     {
         if (!is_array($command)) {
-            $command = array($command);
+            $command = (array)$command;
         }
 
         return $this->run($this->factory->create($command), $bypassErrors, $listeners);
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
-    public static function load($binaries, LoggerInterface $logger = null, $configuration = array())
+    public static function load($binaries, LoggerInterface $logger = null, $configuration = [])
     {
         $finder = new ExecutableFinder();
         $binary = null;
@@ -158,7 +158,8 @@ abstract class AbstractBinary extends EventEmitter implements BinaryInterface
 
         if (null === $binary) {
             throw new ExecutableNotFoundException(sprintf(
-                'Executable not found, proposed : %s', implode(', ', $binaries)
+                'Executable not found, proposed : %s',
+                implode(', ', $binaries)
             ));
         }
 

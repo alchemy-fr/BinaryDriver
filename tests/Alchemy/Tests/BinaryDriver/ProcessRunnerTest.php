@@ -203,6 +203,6 @@ class TestListener extends EventEmitter implements ListenerInterface
 
     public function forwardedEvents()
     {
-        return array();
+        return [];
     }
 }

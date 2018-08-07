@@ -3,8 +3,9 @@
 namespace Alchemy\Tests\BinaryDriver;
 
 use Alchemy\BinaryDriver\Configuration;
+use PHPUnit\Framework\TestCase;
 
-class ConfigurationTest extends \PHPUnit_Framework_TestCase
+class ConfigurationTest extends TestCase
 {
     public function testArrayAccessImplementation()
     {
@@ -53,7 +54,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
             'key3' => 'value3',
         );
 
-        $captured = array();
+        $captured = [];
         $conf = new Configuration($data);
 
         foreach ($conf as $key => $value) {

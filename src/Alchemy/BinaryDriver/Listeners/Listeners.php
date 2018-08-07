@@ -32,7 +32,7 @@ class Listeners extends EventEmitter
      */
     public function register(ListenerInterface $listener, EventEmitter $target = null)
     {
-        $EElisteners = array();
+        $EElisteners = [];
 
         if (null !== $target) {
             $EElisteners = $this->forwardEvents($listener, $target, $listener->forwardedEvents());
@@ -69,7 +69,7 @@ class Listeners extends EventEmitter
 
     private function forwardEvents($source, $target, array $events)
     {
-        $EElisteners = array();
+        $EElisteners = [];
 
         foreach ($events as $event) {
             $listener = $this->createListener($event, $target);

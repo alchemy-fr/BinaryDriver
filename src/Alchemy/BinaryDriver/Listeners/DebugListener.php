@@ -30,7 +30,7 @@ class DebugListener extends EventEmitter implements ListenerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function handle($type, $data)
     {
@@ -42,7 +42,7 @@ class DebugListener extends EventEmitter implements ListenerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function forwardedEvents()
     {

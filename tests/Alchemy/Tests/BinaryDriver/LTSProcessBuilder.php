@@ -13,7 +13,7 @@ class LTSProcessBuilder extends ProcessBuilder
     private $prefix;
     private $timeout;
 
-    public function __construct(array $arguments = array())
+    public function __construct(array $arguments = [])
     {
         $this->arguments = $arguments;
         parent::__construct($arguments);
