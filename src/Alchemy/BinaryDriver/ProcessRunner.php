@@ -64,21 +64,18 @@ class ProcessRunner implements ProcessRunnerInterface
             $process->run($this->buildCallback($listeners));
         } catch (RuntimeException $e) {
             if (!$bypassErrors) {
-                $this->doExecutionFailure($process->getCommandLine(), $e);
+                $this->doExecutionFailure($process->getCommandLine(), $process->getErrorOutput(), $e);
             }
         }
 
-        if (!$bypassErrors && !$process->isSuccessful()) {
-            $this->doExecutionFailure($process->getCommandLine());
-        } elseif (!$process->isSuccessful()) {
-            $this->logger->error(sprintf(
-                '%s failed to execute command %s: %s', $this->name, $process->getCommandLine(), $process->getErrorOutput()
-            ));
 
+        if (!$bypassErrors && !$process->isSuccessful()) {
+            $this->doExecutionFailure($process->getCommandLine(), $process->getErrorOutput());
+        } elseif (!$process->isSuccessful()) {
+            $this->logger->error($this->createErrorMessage($process->getCommandLine(), $process->getErrorOutput()));
             return;
         } else {
             $this->logger->info(sprintf('%s executed command successfully', $this->name));
-
             return $process->getOutput();
         }
     }
@@ -92,13 +89,14 @@ class ProcessRunner implements ProcessRunnerInterface
         };
     }
 
-    private function doExecutionFailure($command, \Exception $e = null)
+    private function doExecutionFailure($command, $errorOutput, \Exception $e = null)
     {
-        $this->logger->error(sprintf(
-            '%s failed to execute command %s', $this->name, $command
-        ));
-        throw new ExecutionFailureException(sprintf(
-            '%s failed to execute command %s', $this->name, $command
-        ), $e ? $e->getCode() : null, $e ?: null);
+        $this->logger->error($this->createErrorMessage($command, $errorOutput));
+        throw new ExecutionFailureException($this->name, $command, $errorOutput,
+            $e ? $e->getCode() : 0, $e ?: null);
+    }
+
+    private function createErrorMessage($command, $errorOutput){
+        return sprintf('%s failed to execute command %s: %s', $this->name, $command, $errorOutput);
     }
 }
