@@ -12,6 +12,7 @@
 namespace Alchemy\BinaryDriver;
 
 use Alchemy\BinaryDriver\Exception\InvalidArgumentException;
+use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ProcessBuilder;
 
 class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
@@ -153,10 +154,18 @@ class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
 
         if (static::$emulateSfLTS) {
             array_unshift($arguments, $this->binary);
+            if (method_exists('Symfony\Component\Process\ProcessUtils', 'escapeArgument')) {
+                $script = implode(' ', array_map(array('Symfony\Component\Process\ProcessUtils', 'escapeArgument'), $arguments));
+            } else {
+                $script = $arguments;
+            }
 
-            return ProcessBuilder::create($arguments)
-                ->setTimeout($this->timeout)
-                ->getProcess();
+            $env = array_replace($_ENV, $_SERVER);
+            $env = array_filter($env, function ($value) {
+                return !is_array($value);
+            });
+
+            return new Process($script, null, $env, null, $this->timeout);
         } else {
             return $this->builder
                 ->setArguments($arguments)
