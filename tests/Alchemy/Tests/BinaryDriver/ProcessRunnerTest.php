@@ -17,15 +17,16 @@ use Alchemy\BinaryDriver\Exception\ExecutionFailureException;
 use Alchemy\BinaryDriver\Listeners\ListenerInterface;
 use Evenement\EventEmitter;
 use Symfony\Component\Process\Exception\RuntimeException as ProcessRuntimeException;
+use Symfony\Component\Process\Process;
 
 class ProcessRunnerTest extends BinaryDriverTestCase
 {
-    public function getProcessRunner($logger)
+    public function getProcessRunner($logger) : ProcessRunner
     {
         return new ProcessRunner($logger, 'test-runner');
     }
 
-    public function testRunSuccessFullProcess()
+    public function testRunSuccessFullProcess() : void
     {
         $logger = $this->createLoggerMock();
         $runner = $this->getProcessRunner($logger);
@@ -42,7 +43,7 @@ class ProcessRunnerTest extends BinaryDriverTestCase
         $this->assertEquals('Kikoo Romain', $runner->run($process, new \SplObjectStorage(), false));
     }
 
-    public function testRunSuccessFullProcessBypassingErrors()
+    public function testRunSuccessFullProcessBypassingErrors() : void
     {
         $logger = $this->createLoggerMock();
         $runner = $this->getProcessRunner($logger);
@@ -59,7 +60,7 @@ class ProcessRunnerTest extends BinaryDriverTestCase
         $this->assertEquals('Kikoo Romain', $runner->run($process, new \SplObjectStorage(), true));
     }
 
-    public function testRunFailingProcess()
+    public function testRunFailingProcess() : void
     {
         $logger = $this->createLoggerMock();
         $runner = $this->getProcessRunner($logger);
@@ -81,15 +82,13 @@ class ProcessRunnerTest extends BinaryDriverTestCase
         }
     }
 
-    public function testRunFailingProcessWithException()
+    public function testRunFailingProcessWithException() : void
     {
         $logger = $this->createLoggerMock();
         $runner = $this->getProcessRunner($logger);
 
         $exception = new ProcessRuntimeException('Process Failed');
-        $process = $this->getMockBuilder('Symfony\Component\Process\Process')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $process = $this->createMock(Process::class);
         $process->expects($this->once())
             ->method('run')
             ->will($this->throwException($exception));
@@ -109,7 +108,7 @@ class ProcessRunnerTest extends BinaryDriverTestCase
         }
     }
 
-    public function testRunfailingProcessBypassingErrors()
+    public function testRunfailingProcessBypassingErrors() : void
     {
         $logger = $this->createLoggerMock();
         $runner = $this->getProcessRunner($logger);
@@ -126,15 +125,13 @@ class ProcessRunnerTest extends BinaryDriverTestCase
         $this->assertSame('', $runner->run($process, new \SplObjectStorage(), true));
     }
 
-    public function testRunFailingProcessWithExceptionBypassingErrors()
+    public function testRunFailingProcessWithExceptionBypassingErrors() : void
     {
         $logger = $this->createLoggerMock();
         $runner = $this->getProcessRunner($logger);
 
         $exception = new ProcessRuntimeException('Process Failed');
-        $process = $this->getMockBuilder('Symfony\Component\Process\Process')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $process = $this->createMock(Process::class);
         $process->expects($this->once())
             ->method('run')
             ->will($this->throwException($exception));
@@ -149,20 +146,23 @@ class ProcessRunnerTest extends BinaryDriverTestCase
         $this->assertSame('', $runner->run($process, new \SplObjectStorage(), true));
     }
 
-    public function testRunSuccessFullProcessWithHandlers()
+    public function testRunSuccessFullProcessWithHandlers() : void
     {
         $logger = $this->createLoggerMock();
         $runner = $this->getProcessRunner($logger);
 
+        /** @var null|\Closure $capturedCallback */
         $capturedCallback = null;
 
         $process = $this->createProcessMock(1, true, '--helloworld--', "Kikoo Romain", null, true);
         $process->expects($this->once())
             ->method('run')
             ->with($this->isInstanceOf('Closure'))
-            ->will($this->returnCallback(function ($callback) use (&$capturedCallback) {
-                $capturedCallback = $callback;
-            }));
+            ->willReturnCallback(
+                function ($callback) use (&$capturedCallback) {
+                    $capturedCallback = $callback;
+                }
+            );
 
         $logger
             ->expects($this->never())
@@ -187,6 +187,7 @@ class ProcessRunnerTest extends BinaryDriverTestCase
         $type = 'err';
         $data = 'data';
 
+        $this->assertNotNull($capturedCallback);
         $capturedCallback($type, $data);
 
         $this->assertEquals($data, $capturedData);

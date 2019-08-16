@@ -85,7 +85,7 @@ class ProcessRunner implements ProcessRunnerInterface
         }
     }
 
-    private function buildCallback(SplObjectStorage $listeners)
+    private function buildCallback(SplObjectStorage $listeners) : callable
     {
         return function ($type, $data) use ($listeners) {
             foreach ($listeners as $listener) {
@@ -95,9 +95,12 @@ class ProcessRunner implements ProcessRunnerInterface
     }
 
     /**
-     * @throws ExecutionFailureException
+     * @param string|null $command
+     * @param \Throwable|null $e
      *
      * @return void
+     *
+     * @throws ExecutionFailureException
      */
     private function doExecutionFailure(? string $command, \Throwable $e = null) : void
     {

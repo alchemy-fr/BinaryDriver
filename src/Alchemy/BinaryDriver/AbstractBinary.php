@@ -61,7 +61,7 @@ abstract class AbstractBinary extends EventEmitter implements BinaryInterface
      */
     public function unlisten(ListenerInterface $listener) : BinaryInterface
     {
-        $this->listenersManager->unregister($listener, $this);
+        $this->listenersManager->unregister($listener);
 
         return $this;
     }
@@ -175,7 +175,7 @@ abstract class AbstractBinary extends EventEmitter implements BinaryInterface
      *
      * @return string
      */
-    abstract public function getName();
+    abstract public function getName() : string;
 
     /**
      * Executes a process, logs events
@@ -188,11 +188,11 @@ abstract class AbstractBinary extends EventEmitter implements BinaryInterface
      *
      * @throws ExecutionFailureException in case of process failure.
      */
-    protected function run(Process $process, $bypassErrors = false, $listeners = null)
+    protected function run(Process $process, $bypassErrors = false, $listeners = null) : string
     {
         if (null !== $listeners) {
             if (!is_array($listeners)) {
-                $listeners = array($listeners);
+                $listeners = [$listeners];
             }
 
             $listenersManager = clone $this->listenersManager;
@@ -207,7 +207,7 @@ abstract class AbstractBinary extends EventEmitter implements BinaryInterface
         return $this->processRunner->run($process, $listenersManager->storage, $bypassErrors);
     }
 
-    private function applyProcessConfiguration()
+    private function applyProcessConfiguration() : self
     {
         if ($this->configuration->has('timeout')) {
             $this->factory->setTimeout($this->configuration->get('timeout'));

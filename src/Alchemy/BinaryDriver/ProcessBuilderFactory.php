@@ -27,28 +27,9 @@ class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
     /**
      * The timeout for the generated processes
      *
-     * @var integer|float
+     * @var null|float
      */
     private $timeout;
-
-    /**
-     * An internal ProcessBuilder.
-     *
-     * Note that this one is used only if Symfony ProcessBuilder has method
-     * setPrefix (2.3)
-     *
-     * @var Process
-     */
-    private $builder;
-
-    /**
-     * Tells whether Symfony LTS ProcessBuilder should be emulated or not.
-     *
-     * This symfony version provided a brand new ::setPrefix method.
-     *
-     * @var bool
-     */
-    public static $emulateSfLTS;
 
     /**
      * Constructor
@@ -59,36 +40,7 @@ class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
      */
     public function __construct(string $binary)
     {
-        $this->detectEmulation();
-
-        if (!self::$emulateSfLTS) {
-            $this->builder = new Process();
-        }
-
         $this->useBinary($binary);
-    }
-
-    /**
-     * Covenient method for unit testing
-     *
-     * @return type
-     */
-    public function getBuilder()
-    {
-        return $this->builder;
-    }
-
-    /**
-     * Covenient method for unit testing
-     *
-     * @param  ProcessBuilder        $builder
-     * @return ProcessBuilderFactory
-     */
-    public function setBuilder(ProcessBuilder $builder)
-    {
-        $this->builder = $builder;
-
-        return $this;
     }
 
     /**
@@ -110,31 +62,23 @@ class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
 
         $this->binary = $binary;
 
-        if (!static::$emulateSfLTS) {
-            $this->builder->setPrefix($binary);
-        }
-
         return $this;
     }
 
     /**
      * @inheritDoc
      */
-    public function setTimeout($timeout)
+    public function setTimeout(float $timeout = null) : ProcessBuilderFactoryInterface
     {
         $this->timeout = $timeout;
 
-        if (!static::$emulateSfLTS) {
-            $this->builder->setTimeout($this->timeout);
-        }
-
         return $this;
     }
 
     /**
      * @inheritDoc
      */
-    public function getTimeout()
+    public function getTimeout() : ?float
     {
         return $this->timeout;
     }
@@ -152,35 +96,11 @@ class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
             $arguments = (array)$arguments;
         }
 
-        if (static::$emulateSfLTS) {
-            array_unshift($arguments, $this->binary);
-            if (method_exists('Symfony\Component\Process\ProcessUtils', 'escapeArgument')) {
-                $script = implode(' ', array_map(array('Symfony\Component\Process\ProcessUtils', 'escapeArgument'), $arguments));
-            } else {
-                $script = $arguments;
-            }
+        array_unshift($arguments, $this->binary);
 
-            $env = array_replace($_ENV, $_SERVER);
-            $env = array_filter($env, function ($value) {
-                return !is_array($value);
-            });
+        $process = new Process($arguments, null, null, null, $this->timeout);
+        $process->inheritEnvironmentVariables();
 
-            return new Process($script, null, $env, null, $this->timeout);
-        } else {
-            return $this->builder
-                ->setArguments($arguments)
-                ->getProcess();
-        }
-    }
-
-    private function detectEmulation()
-    {
-        if (null !== static::$emulateSfLTS) {
-            return $this;
-        }
-
-        static::$emulateSfLTS = !method_exists('Symfony\Component\Process\Process', 'setPrefix');
-
-        return $this;
+        return $process;
     }
 }

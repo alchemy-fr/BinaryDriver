@@ -55,12 +55,12 @@ interface ProcessBuilderFactoryInterface
      *
      * @throws InvalidArgumentException In case the timeout is not valid
      */
-    public function setTimeout($timeout);
+    public function setTimeout(float $timeout = null) : ProcessBuilderFactoryInterface;
 
     /**
      * Returns the current timeout applied to the created processes.
      *
-     * @return integer|float
+     * @return null|float
      */
-    public function getTimeout();
+    public function getTimeout() : ?float;
 }

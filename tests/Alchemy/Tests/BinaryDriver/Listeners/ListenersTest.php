@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class ListenersTest extends TestCase
 {
-    public function testRegister()
+    public function testRegister() : void
     {
         $listener = new MockListener();
 
@@ -38,7 +38,7 @@ class ListenersTest extends TestCase
         $this->assertEquals($data, $capturedData);
     }
 
-    public function testRegisterAndForwardThenUnregister()
+    public function testRegisterAndForwardThenUnregister() : void
     {
         $listener = new MockListener();
         $target = new EventEmitter();
@@ -66,7 +66,7 @@ class ListenersTest extends TestCase
         $listener->handle($type, $data);
         $listener->handle($type, $data);
 
-        $listeners->unregister($listener, $target);
+        $listeners->unregister($listener);
 
         $listener->handle($type, $data);
 
@@ -86,7 +86,7 @@ class MockListener extends EventEmitter implements ListenerInterface
      */
     public function handle(string $type, string $data) : void
     {
-        $this->emit('received', array($type, $data));
+        $this->emit('received', [$type, $data]);
     }
 
     /**

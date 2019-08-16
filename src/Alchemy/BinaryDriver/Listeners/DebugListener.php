@@ -50,7 +50,7 @@ class DebugListener extends EventEmitter implements ListenerInterface
         return array_unique([$this->eventErr, $this->eventOut]);
     }
 
-    private function emitLines(string $event, string $prefix, string $lines)
+    private function emitLines(string $event, string $prefix, string $lines) : void
     {
         foreach (explode("\n", $lines) as $line) {
             $this->emit($event, [$prefix . $line]);
