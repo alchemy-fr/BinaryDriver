@@ -3,6 +3,7 @@ declare (strict_types = 1);
 
 namespace Alchemy\BinaryDriver\Listeners;
 
+use Alchemy\BinaryDriver\Exception\InvalidArgumentException;
 use SplObjectStorage;
 use Evenement\EventEmitter;
 
@@ -29,7 +30,7 @@ class Listeners extends EventEmitter
      * @param ListenerInterface $listener
      * @param null|EventEmitter $target
      *
-     * @return ListenersInterface
+     * @return ListenerInterface
      */
     public function register(ListenerInterface $listener, EventEmitter $target = null) : self
     {
@@ -49,7 +50,7 @@ class Listeners extends EventEmitter
      *
      * @param ListenerInterface $listener
      *
-     * @return ListenersInterface
+     * @return ListenerInterface
      *
      * @throws InvalidArgumentException In case the listener is not registered
      */

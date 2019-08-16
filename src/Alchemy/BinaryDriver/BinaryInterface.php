@@ -44,7 +44,7 @@ interface BinaryInterface extends ConfigurationAwareInterface, ProcessBuilderFac
      * Calling this method on a `ls` driver with the command `-a` would run `ls -a`.
      *
      * @param array|string            $command      A command or an array of command
-     * @param bool                 $bypassErrors If set to true, an erronous process will not throw an exception
+     * @param bool                    $bypassErrors If set to true, an erronous process will not throw an exception
      * @param ListenerInterface|array $listeners    A listener or an array of listeners to register for this unique run
      *
      * @return string The command output
@@ -57,7 +57,7 @@ interface BinaryInterface extends ConfigurationAwareInterface, ProcessBuilderFac
      * Loads a binary
      *
      * @param string|array                 $binaries      A binary name or an array of binary names
-     * @param null|LoggerInterface        $logger        A Logger
+     * @param null|LoggerInterface         $logger        A Logger
      * @param array|ConfigurationInterface $configuration The configuration
      *
      * @throws ExecutableNotFoundException In case none of the binaries were found

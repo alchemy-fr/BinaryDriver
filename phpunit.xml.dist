@@ -21,8 +21,7 @@
     </testsuites>
     <filter>
       <whitelist>
-        <directory>vendor</directory>
-        <directory>tests</directory>
+        <directory>src</directory>
       </whitelist>
     </filter>
 

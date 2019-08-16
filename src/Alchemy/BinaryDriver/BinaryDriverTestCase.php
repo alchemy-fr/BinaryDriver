@@ -3,6 +3,7 @@ declare (strict_types = 1);
 
 namespace Alchemy\BinaryDriver;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Process\Process;
 use PHPUnit\Framework\TestCase;
@@ -13,11 +14,11 @@ use PHPUnit\Framework\TestCase;
 class BinaryDriverTestCase extends TestCase
 {
     /**
-     * @return ProcessBuilderFactoryInterface
+     * @return ProcessBuilderFactoryInterface|MockObject
      */
-    public function createProcessBuilderFactoryMock()
+    public function createProcessBuilderFactoryMock() : ProcessBuilderFactoryInterface
     {
-        return $this->getMockBuilder(\Alchemy\BinaryDriver\ProcessBuilderFactoryInterface::class)->getMock();
+        return $this->createMock(ProcessBuilderFactoryInterface::class);
     }
 
     /**
@@ -28,13 +29,11 @@ class BinaryDriverTestCase extends TestCase
      * @param string  $error       The process error output
      * @param bool $enableCallback
      *
-     * @return Process
+     * @return Process|MockObject
      */
-    public function createProcessMock(int $runs = 1, bool $success = true, string $commandLine = null, string $output = null, string $error = null, bool $enableCallback = false)
+    public function createProcessMock(int $runs = 1, bool $success = true, ?string $commandLine = null, ?string $output = null, string $error = null, bool $enableCallback = false) : Process
     {
-        $process = $this->getMockBuilder(\Symfony\Component\Process\Process::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $process = $this->createMock(Process::class);
 
         $builder = $process->expects($this->exactly($runs))
             ->method('run');
@@ -45,7 +44,7 @@ class BinaryDriverTestCase extends TestCase
 
         $process->expects($this->any())
             ->method('isSuccessful')
-            ->will($this->returnValue($success));
+            ->willReturn($success);
 
         foreach ([
             'getOutput' => $output,
@@ -55,25 +54,25 @@ class BinaryDriverTestCase extends TestCase
             $process
                 ->expects($this->any())
                 ->method($command)
-                ->will($this->returnValue($value));
+                ->willReturn($value);
         }
 
         return $process;
     }
 
     /**
-     * @return LoggerInterface
+     * @return LoggerInterface|MockObject
      */
-    public function createLoggerMock()
+    public function createLoggerMock() : LoggerInterface
     {
-        return $this->getMockBuilder(\Psr\Log\LoggerInterface::class)->getMock();
+        return $this->createMock(LoggerInterface::class);
     }
 
     /**
-     * @return ConfigurationInterface
+     * @return ConfigurationInterface|MockObject
      */
-    public function createConfigurationMock()
+    public function createConfigurationMock() : ConfigurationInterface
     {
-        return $this->getMockBuilder(\Alchemy\BinaryDriver\ConfigurationInterface::class)->getMock();
+        return $this->createMock(ConfigurationInterface::class);
     }
 }

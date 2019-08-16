@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class DebugListenerTest extends TestCase
 {
-    public function testHandle()
+    public function testHandle() : void
     {
         $listener = new DebugListener();
 
@@ -21,13 +21,13 @@ class DebugListenerTest extends TestCase
         $listener->handle('unknown', "lalala");
         $listener->handle(Process::OUT, "another output\n");
 
-        $expected = array(
+        $expected = [
             '[ERROR] first line',
             '[ERROR] second line',
             '[OUT] cool output',
             '[OUT] another output',
             '[OUT] ',
-        );
+        ];
 
         $this->assertEquals($expected, $lines);
     }

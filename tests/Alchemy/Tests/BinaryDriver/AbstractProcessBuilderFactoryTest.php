@@ -8,17 +8,18 @@ use PHPUnit\Framework\TestCase;
 
 abstract class AbstractProcessBuilderFactoryTest extends TestCase
 {
+    /**
+     * @var string
+     */
     public static $phpBinary;
 
-    private $original;
     /**
      * @return ProcessBuilderFactory
      */
-    abstract protected function getProcessBuilderFactory($binary);
+    abstract protected function getProcessBuilderFactory($binary) : ProcessBuilderFactory;
 
     public function setUp() : void
     {
-        ProcessBuilderFactory::$emulateSfLTS = null;
         if (null === static::$phpBinary) {
             $this->markTestSkipped('Unable to detect php binary, skipping.');
             return;
@@ -33,16 +34,16 @@ abstract class AbstractProcessBuilderFactoryTest extends TestCase
         static::$phpBinary = $finder->find('php');
     }
 
-    public function testThatBinaryIsSetOnConstruction()
+    public function testThatBinaryIsSetOnConstruction() : void
     {
         $factory = $this->getProcessBuilderFactory(static::$phpBinary);
         $this->assertEquals(static::$phpBinary, $factory->getBinary());
     }
 
-    public function testGetSetBinary()
+    public function testGetSetBinary() : void
     {
         $finder = new ExecutableFinder();
-        $phpUnit = $finder->find('phpunit');
+        $phpUnit = $finder->find('php');
 
         if (null === $phpUnit) {
             $this->markTestSkipped('Unable to detect phpunit binary, skipping');
@@ -53,11 +54,9 @@ abstract class AbstractProcessBuilderFactoryTest extends TestCase
         $this->assertEquals($phpUnit, $factory->getBinary());
     }
 
-    /**
-     * @expectedException Alchemy\BinaryDriver\Exception\InvalidArgumentException
-     */
-    public function testUseNonExistantBinary()
+    public function testUseNonExistantBinary() : void
     {
+        $this->expectException(\Alchemy\BinaryDriver\Exception\InvalidArgumentException::class);
         $factory = $this->getProcessBuilderFactory(static::$phpBinary);
         $factory->useBinary('itissureitdoesnotexist');
     }
@@ -65,7 +64,7 @@ abstract class AbstractProcessBuilderFactoryTest extends TestCase
     /**
      * @requires OS Linux
      */
-    public function testCreateShouldReturnAProcess()
+    public function testCreateShouldReturnAProcess() : void
     {
         $factory = $this->getProcessBuilderFactory(static::$phpBinary);
         $process = $factory->create();
@@ -77,7 +76,7 @@ abstract class AbstractProcessBuilderFactoryTest extends TestCase
     /**
      * @requires OS Linux
      */
-    public function testCreateWithStringArgument()
+    public function testCreateWithStringArgument() : void
     {
         $factory = $this->getProcessBuilderFactory(static::$phpBinary);
         $process = $factory->create('-v');
@@ -89,7 +88,7 @@ abstract class AbstractProcessBuilderFactoryTest extends TestCase
     /**
      * @requires OS Linux
      */
-    public function testCreateWithArrayArgument()
+    public function testCreateWithArrayArgument() : void
     {
         $factory = $this->getProcessBuilderFactory(static::$phpBinary);
         $process = $factory->create(['-r', 'echo "Hello !";']);
@@ -98,10 +97,10 @@ abstract class AbstractProcessBuilderFactoryTest extends TestCase
         $this->assertEquals("'" . static::$phpBinary . "' '-r' 'echo \"Hello !\";'", $process->getCommandLine());
     }
 
-    public function testCreateWithTimeout()
+    public function testCreateWithTimeout() : void
     {
         $factory = $this->getProcessBuilderFactory(static::$phpBinary);
-        $factory->setTimeout(200);
+        $factory->setTimeout(200.0);
         $process = $factory->create(['-i']);
 
         $this->assertInstanceOf(\Symfony\Component\Process\Process::class, $process);

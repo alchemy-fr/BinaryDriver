@@ -25,6 +25,8 @@ interface ProcessBuilderFactoryAwareInterface
      * Set a process builder factory
      *
      * @param ProcessBuilderFactoryInterface $factory
+     *
+     * @return ProcessBuilderFactoryAwareInterface
      */
     public function setProcessBuilderFactory(ProcessBuilderFactoryInterface $factory) : ProcessBuilderFactoryAwareInterface;
 }

@@ -7,9 +7,9 @@ use PHPUnit\Framework\TestCase;
 
 class ConfigurationTest extends TestCase
 {
-    public function testArrayAccessImplementation()
+    public function testArrayAccessImplementation() : void
     {
-        $configuration = new Configuration(array('key' => 'value'));
+        $configuration = new Configuration(['key' => 'value']);
 
         $this->assertTrue(isset($configuration['key']));
         $this->assertEquals('value', $configuration['key']);
@@ -23,16 +23,16 @@ class ConfigurationTest extends TestCase
         $this->assertEquals('value2', $configuration['key2']);
     }
 
-    public function testGetOnNonExistentKeyShouldReturnDefaultValue()
+    public function testGetOnNonExistentKeyShouldReturnDefaultValue() : void
     {
         $conf = new Configuration();
         $this->assertEquals('booba', $conf->get('hooba', 'booba'));
         $this->assertEquals(null, $conf->get('hooba'));
     }
 
-    public function testSetHasGetRemove()
+    public function testSetHasGetRemove() : void
     {
-        $configuration = new Configuration(array('key' => 'value'));
+        $configuration = new Configuration(['key' => 'value']);
 
         $this->assertTrue($configuration->has('key'));
         $this->assertEquals('value', $configuration->get('key'));
@@ -46,13 +46,13 @@ class ConfigurationTest extends TestCase
         $this->assertEquals('value2', $configuration->get('key2'));
     }
 
-    public function testIterator()
+    public function testIterator() : void
     {
-        $data = array(
+        $data = [
             'key1' => 'value1',
             'key2' => 'value2',
             'key3' => 'value3',
-        );
+        ];
 
         $captured = [];
         $conf = new Configuration($data);
@@ -64,13 +64,13 @@ class ConfigurationTest extends TestCase
         $this->assertEquals($data, $captured);
     }
 
-    public function testAll()
+    public function testAll() : void
     {
-        $data = array(
+        $data = [
             'key1' => 'value1',
             'key2' => 'value2',
             'key3' => 'value3',
-        );
+        ];
 
         $conf = new Configuration($data);
         $this->assertEquals($data, $conf->all());
