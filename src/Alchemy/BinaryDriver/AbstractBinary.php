@@ -16,9 +16,8 @@ use Alchemy\BinaryDriver\Exception\ExecutionFailureException;
 use Alchemy\BinaryDriver\Listeners\Listeners;
 use Alchemy\BinaryDriver\Listeners\ListenerInterface;
 use Evenement\EventEmitter;
-use Monolog\Logger;
-use Monolog\Handler\NullHandler;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\Process;
 
@@ -163,8 +162,7 @@ abstract class AbstractBinary extends EventEmitter implements BinaryInterface
         }
 
         if (null === $logger) {
-            $logger = new Logger(__NAMESPACE__ . ' logger');
-            $logger->pushHandler(new NullHandler());
+            $logger = new NullLogger();
         }
 
         $configuration = $configuration instanceof ConfigurationInterface ? $configuration : new Configuration($configuration);
