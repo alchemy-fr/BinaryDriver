@@ -35,6 +35,9 @@ abstract class AbstractBinary extends EventEmitter implements BinaryInterface
     /** @var Listeners */
     private $listenersManager;
 
+    /** @var Process */
+    private $lastProcess;
+
     public function __construct(ProcessBuilderFactoryInterface $factory, LoggerInterface $logger, ConfigurationInterface $configuration)
     {
         $this->factory = $factory;
@@ -133,7 +136,17 @@ abstract class AbstractBinary extends EventEmitter implements BinaryInterface
             $command = array($command);
         }
 
-        return $this->run($this->factory->create($command), $bypassErrors, $listeners);
+        // what if we still need to access the process object?
+        $this->lastProcess = $this->factory->create($command);
+        return $this->run($this->lastProcess, $bypassErrors, $listeners);
+    }
+
+    /**
+     * @return Process Last ran process
+     */
+    public function getLastProcess()
+    {
+        return $this->lastProcess;
     }
 
     /**
