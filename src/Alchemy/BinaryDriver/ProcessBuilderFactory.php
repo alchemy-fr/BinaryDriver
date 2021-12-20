@@ -13,7 +13,6 @@ namespace Alchemy\BinaryDriver;
 
 use Alchemy\BinaryDriver\Exception\InvalidArgumentException;
 use Symfony\Component\Process\Process;
-use Symfony\Component\Process\ProcessBuilder;
 
 class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
 {
@@ -32,25 +31,6 @@ class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
     private $timeout;
 
     /**
-     * An internal ProcessBuilder.
-     *
-     * Note that this one is used only if Symfony ProcessBuilder has method
-     * setPrefix (2.3)
-     *
-     * @var ProcessBuilder
-     */
-    private $builder;
-
-    /**
-     * Tells whether Symfony LTS ProcessBuilder should be emulated or not.
-     *
-     * This symfony version provided a brand new ::setPrefix method.
-     *
-     * @var Boolean
-     */
-    public static $emulateSfLTS;
-
-    /**
      * Constructor
      *
      * @param String $binary The path to the binary
@@ -59,36 +39,7 @@ class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
      */
     public function __construct($binary)
     {
-        $this->detectEmulation();
-
-        if (!self::$emulateSfLTS) {
-            $this->builder = new ProcessBuilder();
-        }
-
         $this->useBinary($binary);
-    }
-
-    /**
-     * Covenient method for unit testing
-     *
-     * @return type
-     */
-    public function getBuilder()
-    {
-        return $this->builder;
-    }
-
-    /**
-     * Covenient method for unit testing
-     *
-     * @param  ProcessBuilder        $builder
-     * @return ProcessBuilderFactory
-     */
-    public function setBuilder(ProcessBuilder $builder)
-    {
-        $this->builder = $builder;
-
-        return $this;
     }
 
     /**
@@ -110,10 +61,6 @@ class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
 
         $this->binary = $binary;
 
-        if (!static::$emulateSfLTS) {
-            $this->builder->setPrefix($binary);
-        }
-
         return $this;
     }
 
@@ -123,10 +70,6 @@ class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
     public function setTimeout($timeout)
     {
         $this->timeout = $timeout;
-
-        if (!static::$emulateSfLTS) {
-            $this->builder->setTimeout($this->timeout);
-        }
 
         return $this;
     }
@@ -142,45 +85,28 @@ class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
     /**
      * @inheritdoc
      */
-    public function create($arguments = array())
+    public function create($arguments = [])
     {
         if (null === $this->binary) {
             throw new InvalidArgumentException('No binary set');
         }
 
         if (!is_array($arguments)) {
-            $arguments = array($arguments);
+            $arguments = [$arguments];
         }
 
-        if (static::$emulateSfLTS) {
-            array_unshift($arguments, $this->binary);
-            if (method_exists('Symfony\Component\Process\ProcessUtils', 'escapeArgument')) {
-                $script = implode(' ', array_map(array('Symfony\Component\Process\ProcessUtils', 'escapeArgument'), $arguments));
-            } else {
-                $script = $arguments;
-            }
-
-            $env = array_replace($_ENV, $_SERVER);
-            $env = array_filter($env, function ($value) {
-                return !is_array($value);
-            });
-
-            return new Process($script, null, $env, null, $this->timeout);
+        array_unshift($arguments, $this->binary);
+        if (method_exists('Symfony\Component\Process\ProcessUtils', 'escapeArgument')) {
+            $script = implode(' ', array_map(['Symfony\Component\Process\ProcessUtils', 'escapeArgument'], $arguments));
         } else {
-            return $this->builder
-                ->setArguments($arguments)
-                ->getProcess();
-        }
-    }
-
-    private function detectEmulation()
-    {
-        if (null !== static::$emulateSfLTS) {
-            return $this;
+            $script = $arguments;
         }
 
-        static::$emulateSfLTS = !method_exists('Symfony\Component\Process\ProcessBuilder', 'setPrefix');
+        $env = array_replace($_ENV, $_SERVER);
+        $env = array_filter($env, function ($value) {
+            return !is_array($value);
+        });
 
-        return $this;
+        return new Process($script, null, $env, null, $this->timeout);
     }
 }

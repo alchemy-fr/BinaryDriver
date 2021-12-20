@@ -2,13 +2,14 @@
 
 namespace Alchemy\BinaryDriver;
 
+use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Process\Process;
 
 /**
  * Convenient PHPUnit methods for testing BinaryDriverInterface implementations.
  */
-class BinaryDriverTestCase extends \PHPUnit_Framework_TestCase
+class BinaryDriverTestCase extends TestCase
 {
     /**
      * @return ProcessBuilderFactoryInterface
@@ -16,6 +17,16 @@ class BinaryDriverTestCase extends \PHPUnit_Framework_TestCase
     public function createProcessBuilderFactoryMock()
     {
         return $this->getMock('Alchemy\BinaryDriver\ProcessBuilderFactoryInterface');
+    }
+
+    /**
+     * Creates a mock object.
+     *
+     * @psalm-return MockObject&MockedType
+     */
+    protected function getMock(string $className)
+    {
+        return $this->getMockBuilder($className)->getMock();
     }
 
     /**
@@ -44,11 +55,11 @@ class BinaryDriverTestCase extends \PHPUnit_Framework_TestCase
             ->method('isSuccessful')
             ->will($this->returnValue($success));
 
-        foreach (array(
-            'getOutput' => $output,
-            'getErrorOutput' => $error,
+        foreach ([
+            'getOutput' => is_null($output) ? '' : $output,
+            'getErrorOutput' => is_null($error) ? '' : $error,
             'getCommandLine' => $commandLine,
-        ) as $command => $value) {
+        ] as $command => $value) {
             $process
                 ->expects($this->any())
                 ->method($command)

@@ -3,15 +3,16 @@
 namespace Alchemy\Tests\BinaryDriver\Listeners;
 
 use Alchemy\BinaryDriver\Listeners\DebugListener;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Process;
 
-class DebugListenerTest extends \PHPUnit_Framework_TestCase
+class DebugListenerTest extends TestCase
 {
     public function testHandle()
     {
         $listener = new DebugListener();
 
-        $lines = array();
+        $lines = [];
         $listener->on('debug', function ($line) use (&$lines) {
             $lines[] = $line;
         });
@@ -20,13 +21,13 @@ class DebugListenerTest extends \PHPUnit_Framework_TestCase
         $listener->handle('unknown', "lalala");
         $listener->handle(Process::OUT, "another output\n");
 
-        $expected = array(
+        $expected = [
             '[ERROR] first line',
             '[ERROR] second line',
             '[OUT] cool output',
             '[OUT] another output',
             '[OUT] ',
-        );
+        ];
 
         $this->assertEquals($expected, $lines);
     }

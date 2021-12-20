@@ -3,12 +3,13 @@
 namespace Alchemy\Tests\BinaryDriver;
 
 use Alchemy\BinaryDriver\Configuration;
+use PHPUnit\Framework\TestCase;
 
-class ConfigurationTest extends \PHPUnit_Framework_TestCase
+class ConfigurationTest extends TestCase
 {
     public function testArrayAccessImplementation()
     {
-        $configuration = new Configuration(array('key' => 'value'));
+        $configuration = new Configuration(['key' => 'value']);
 
         $this->assertTrue(isset($configuration['key']));
         $this->assertEquals('value', $configuration['key']);
@@ -31,7 +32,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
 
     public function testSetHasGetRemove()
     {
-        $configuration = new Configuration(array('key' => 'value'));
+        $configuration = new Configuration(['key' => 'value']);
 
         $this->assertTrue($configuration->has('key'));
         $this->assertEquals('value', $configuration->get('key'));
@@ -47,14 +48,14 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
 
     public function testIterator()
     {
-        $data = array(
+        $data = [
             'key1' => 'value1',
             'key2' => 'value2',
             'key3' => 'value3',
-        );
+        ];
 
-        $captured = array();
-        $conf = new Configuration($data);
+        $captured = [];
+        $conf     = new Configuration($data);
 
         foreach ($conf as $key => $value) {
             $captured[$key] = $value;
@@ -65,14 +66,13 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
 
     public function testAll()
     {
-        $data = array(
+        $data = [
             'key1' => 'value1',
             'key2' => 'value2',
             'key3' => 'value3',
-        );
+        ];
 
         $conf = new Configuration($data);
         $this->assertEquals($data, $conf->all());
     }
-
 }

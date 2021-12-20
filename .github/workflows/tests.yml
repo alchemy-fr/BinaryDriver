@@ -1,0 +1,42 @@
+name: Test
+
+on:
+  pull_request: ~
+  push:
+    branches:
+      - "master"
+
+jobs:
+  test:
+    name: "PHP ${{ matrix.php-version }} ${{ matrix.dependency-versions }} ${{ matrix.composer-stability }}"
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-20.04]
+        php-version: [8.1, 8.0, 7.4]
+        dependency-versions: [prefer-lowest, prefer-stable]
+
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v2
+
+      - name: Install and configure PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          tools: composer:v2
+          coverage: none
+
+      - name: Set composer stability
+        if: ${{ matrix.composer-stability }}
+        run: composer config minimum-stability ${{ matrix.composer-stability }}
+
+      - name: Install composer dependencies
+        uses: ramsey/composer-install@v1
+        with:
+          dependency-versions: ${{ matrix.dependency-versions }}
+
+      - name: Run tests
+        run: ./vendor/bin/phpunit --verbose
