@@ -2,7 +2,7 @@
 
 Binary-Driver is a set of PHP tools to build binary drivers.
 
-[![Build Status](https://travis-ci.org/alchemy-fr/BinaryDriver.png?branch=master)](https://travis-ci.org/alchemy-fr/BinaryDriver)
+[![Build Status](https://github.com/alchemy-fr/BinaryDriver/actions/workflows/test.yaml/badge.svg)](https://github.com/alchemy-fr/BinaryDriver/actions/workflows/test.yaml)
 
 ## Why ?
 

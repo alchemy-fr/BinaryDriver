@@ -3,8 +3,9 @@
 namespace Alchemy\Tests\BinaryDriver;
 
 use Alchemy\BinaryDriver\Configuration;
+use PHPUnit\Framework\TestCase;
 
-class ConfigurationTest extends \PHPUnit_Framework_TestCase
+class ConfigurationTest extends TestCase
 {
     public function testArrayAccessImplementation()
     {

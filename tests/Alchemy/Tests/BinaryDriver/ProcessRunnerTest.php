@@ -64,7 +64,7 @@ class ProcessRunnerTest extends BinaryDriverTestCase
         $logger = $this->createLoggerMock();
         $runner = $this->getProcessRunner($logger);
 
-        $process = $this->createProcessMock(1, false, '--helloworld--', null, null, true);
+        $process = $this->createProcessMock(1, false, '--helloworld--', '', '', true);
 
         $logger
             ->expects($this->once())
@@ -114,7 +114,7 @@ class ProcessRunnerTest extends BinaryDriverTestCase
         $logger = $this->createLoggerMock();
         $runner = $this->getProcessRunner($logger);
 
-        $process = $this->createProcessMock(1, false, '--helloworld--', 'Hello output', null, true);
+        $process = $this->createProcessMock(1, false, '--helloworld--', 'Hello output', '', true);
 
         $logger
             ->expects($this->once())

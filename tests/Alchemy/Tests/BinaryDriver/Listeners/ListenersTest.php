@@ -5,8 +5,9 @@ namespace Alchemy\Tests\BinaryDriver\Listeners;
 use Alchemy\BinaryDriver\Listeners\Listeners;
 use Evenement\EventEmitter;
 use Alchemy\BinaryDriver\Listeners\ListenerInterface;
+use PHPUnit\Framework\TestCase;
 
-class ListenersTest extends \PHPUnit_Framework_TestCase
+class ListenersTest extends TestCase
 {
     public function testRegister()
     {

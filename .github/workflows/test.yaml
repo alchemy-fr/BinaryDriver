@@ -1,0 +1,70 @@
+name: Test
+
+on:
+    push:
+    pull_request:
+        types: [opened, synchronize, edited, reopened]
+
+jobs:
+    test:
+        name: "PHP ${{ matrix.php-version }}${{ matrix.symfony-process-version != '' && format(' + symfony/process {0}', matrix.symfony-process-version) || '' }}"
+        runs-on: ubuntu-20.04
+
+        strategy:
+            fail-fast: false
+            matrix:
+                php-version:
+                    - '5.5'
+                    - '5.6'
+                    - '7.0'
+                    - '7.1'
+                    - '7.2'
+                    - '7.3'
+                    - '7.4'
+                    - '8.0'
+                    - '8.1'
+                symfony-process-version: ['']
+                include:
+                    - php-version: '7.0'
+                      symfony-process-version: '2.0'
+                    - php-version: '7.0'
+                      symfony-process-version: '3.0'
+                    - php-version: '7.2'
+                      symfony-process-version: '5.0'
+                    - php-version: '7.3'
+                      symfony-process-version: '5.0'
+                    - php-version: '7.4'
+                      symfony-process-version: '5.0'
+                    - php-version: '8.0'
+                      symfony-process-version: '5.0'
+                    - php-version: '8.0'
+                      symfony-process-version: '6.0'
+                    - php-version: '8.1'
+                      symfony-process-version: '5.0'
+                    - php-version: '8.1'
+                      symfony-process-version: '6.0'
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  coverage: none
+                  ini-values: "memory_limit=-1"
+                  php-version: ${{ matrix.php-version }}
+                  tools: composer:v2
+
+            - name: Configure Symfony Process
+              if: ${{ matrix.symfony-process-version != '' }}
+              run: composer require --no-update "symfony/process:^${{ matrix.symfony-process-version }}"
+
+            - name: Install dependencies
+              run: composer install --prefer-dist --no-progress
+
+            - name: Install Simple PHPUnit
+              run: vendor/bin/simple-phpunit install
+
+            - name: Run PHPUnit
+              run: vendor/bin/simple-phpunit -v
