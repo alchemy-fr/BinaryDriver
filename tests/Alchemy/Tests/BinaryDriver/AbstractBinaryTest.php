@@ -7,6 +7,7 @@ use Alchemy\BinaryDriver\BinaryDriverTestCase;
 use Alchemy\BinaryDriver\Configuration;
 use Alchemy\BinaryDriver\Exception\ExecutableNotFoundException;
 use Alchemy\BinaryDriver\Listeners\ListenerInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Process\ExecutableFinder;
 
 class AbstractBinaryTest extends BinaryDriverTestCase
@@ -61,21 +62,21 @@ class AbstractBinaryTest extends BinaryDriverTestCase
 
     public function testLoadWithMultiplePathExpectingAFailure()
     {
-        $this->setExpectedException(ExecutableNotFoundException::class);
+        $this->expectException(ExecutableNotFoundException::class);
 
         Implementation::load(array('bachibouzouk', 'moribon'));
     }
 
     public function testLoadWithUniquePathExpectingAFailure()
     {
-        $this->setExpectedException(ExecutableNotFoundException::class);
+        $this->expectException(ExecutableNotFoundException::class);
 
         Implementation::load('bachibouzouk');
     }
 
     public function testLoadWithCustomLogger()
     {
-        $logger = $this->getMock('Psr\Log\LoggerInterface');
+        $logger = $this->createMock('Psr\Log\LoggerInterface');
         $imp = Implementation::load('php', $logger);
 
         $this->assertEquals($logger, $imp->getProcessRunner()->getLogger());
@@ -91,7 +92,7 @@ class AbstractBinaryTest extends BinaryDriverTestCase
 
     public function testLoadWithCustomConfigurationAsObject()
     {
-        $conf = $this->getMock('Alchemy\BinaryDriver\ConfigurationInterface');
+        $conf = $this->createMock('Alchemy\BinaryDriver\ConfigurationInterface');
         $imp = Implementation::load('php', null, $conf);
 
         $this->assertEquals($conf, $imp->getConfiguration());
@@ -100,7 +101,7 @@ class AbstractBinaryTest extends BinaryDriverTestCase
     public function testProcessBuilderFactoryGetterAndSetters()
     {
         $imp = Implementation::load('php');
-        $factory = $this->getMock('Alchemy\BinaryDriver\ProcessBuilderFactoryInterface');
+        $factory = $this->createMock('Alchemy\BinaryDriver\ProcessBuilderFactoryInterface');
 
         $imp->setProcessBuilderFactory($factory);
         $this->assertEquals($factory, $imp->getProcessBuilderFactory());
@@ -109,7 +110,7 @@ class AbstractBinaryTest extends BinaryDriverTestCase
     public function testConfigurationGetterAndSetters()
     {
         $imp = Implementation::load('php');
-        $conf = $this->getMock('Alchemy\BinaryDriver\ConfigurationInterface');
+        $conf = $this->createMock('Alchemy\BinaryDriver\ConfigurationInterface');
 
         $imp->setConfiguration($conf);
         $this->assertEquals($conf, $imp->getConfiguration());
@@ -132,7 +133,7 @@ class AbstractBinaryTest extends BinaryDriverTestCase
     {
         $imp = Implementation::load('php', null, array('timeout' => 42));
 
-        $factory = $this->getMock('Alchemy\BinaryDriver\ProcessBuilderFactoryInterface');
+        $factory = $this->createMock('Alchemy\BinaryDriver\ProcessBuilderFactoryInterface');
         $factory->expects($this->once())
             ->method('setTimeout')
             ->with(42);
@@ -148,7 +149,7 @@ class AbstractBinaryTest extends BinaryDriverTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $listener = $this->getMock('Alchemy\BinaryDriver\Listeners\ListenerInterface');
+        $listener = $this->createMock('Alchemy\BinaryDriver\Listeners\ListenerInterface');
 
         $listeners->expects($this->once())
             ->method('register')
@@ -168,8 +169,8 @@ class AbstractBinaryTest extends BinaryDriverTestCase
     public function testCommandRunsAProcess($parameters, $bypassErrors, $expectedParameters, $output)
     {
         $imp = Implementation::load('php');
-        $factory = $this->getMock('Alchemy\BinaryDriver\ProcessBuilderFactoryInterface');
-        $processRunner = $this->getMock('Alchemy\BinaryDriver\ProcessRunnerInterface');
+        $factory = $this->createMock('Alchemy\BinaryDriver\ProcessBuilderFactoryInterface');
+        $processRunner = $this->createMock('Alchemy\BinaryDriver\ProcessRunnerInterface');
 
         $process = $this->getMockBuilder('Symfony\Component\Process\Process')
             ->disableOriginalConstructor()
@@ -197,8 +198,8 @@ class AbstractBinaryTest extends BinaryDriverTestCase
     public function testCommandWithTemporaryListeners($parameters, $bypassErrors, $expectedParameters, $output, $count, $listeners)
     {
         $imp = Implementation::load('php');
-        $factory = $this->getMock('Alchemy\BinaryDriver\ProcessBuilderFactoryInterface');
-        $processRunner = $this->getMock('Alchemy\BinaryDriver\ProcessRunnerInterface');
+        $factory = $this->createMock('Alchemy\BinaryDriver\ProcessBuilderFactoryInterface');
+        $processRunner = $this->createMock('Alchemy\BinaryDriver\ProcessRunnerInterface');
 
         $process = $this->getMockBuilder('Symfony\Component\Process\Process')
             ->disableOriginalConstructor()
@@ -263,7 +264,7 @@ class AbstractBinaryTest extends BinaryDriverTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $listener = $this->getMock('Alchemy\BinaryDriver\Listeners\ListenerInterface');
+        $listener = $this->createMock('Alchemy\BinaryDriver\Listeners\ListenerInterface');
 
         $listeners->expects($this->once())
             ->method('unregister')
@@ -278,11 +279,11 @@ class AbstractBinaryTest extends BinaryDriverTestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return MockObject
      */
     private function getMockListener()
     {
-        $listener = $this->getMock(ListenerInterface::class);
+        $listener = $this->createMock(ListenerInterface::class);
         $listener->expects($this->any())
             ->method('forwardedEvents')
             ->willReturn(array());

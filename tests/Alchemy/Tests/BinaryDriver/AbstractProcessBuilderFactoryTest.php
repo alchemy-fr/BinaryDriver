@@ -2,10 +2,12 @@
 
 namespace Alchemy\Tests\BinaryDriver;
 
+use Alchemy\BinaryDriver\Exception\InvalidArgumentException;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\ExecutableFinder;
 use Alchemy\BinaryDriver\ProcessBuilderFactory;
 
-abstract class AbstractProcessBuilderFactoryTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractProcessBuilderFactoryTest extends TestCase
 {
     public static $phpBinary;
 
@@ -49,11 +51,10 @@ abstract class AbstractProcessBuilderFactoryTest extends \PHPUnit_Framework_Test
         $this->assertEquals($phpUnit, $factory->getBinary());
     }
 
-    /**
-     * @expectedException Alchemy\BinaryDriver\Exception\InvalidArgumentException
-     */
     public function testUseNonExistantBinary()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $factory = $this->getProcessBuilderFactory(static::$phpBinary);
         $factory->useBinary('itissureitdoesnotexist');
     }

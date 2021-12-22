@@ -7,24 +7,24 @@
          convertWarningsToExceptions="true"
          processIsolation="false"
          stopOnFailure="false"
-         syntaxCheck="true"
          verbose="false"
          bootstrap="tests/bootstrap.php"
 >
     <php>
+      <env name="SYMFONY_PHPUNIT_REMOVE_RETURN_TYPEHINT" value="true"/>
+      <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled" />
       <ini name="display_errors" value="on"/>
     </php>
 
     <testsuites>
-        <testsuite>
+        <testsuite name="unit">
             <directory>tests</directory>
         </testsuite>
     </testsuites>
     <filter>
-      <blacklist>
-        <directory>vendor</directory>
-        <directory>tests</directory>
-      </blacklist>
+      <whitelist processUncoveredFilesFromWhitelist="true">
+        <directory suffix=".php">src/</directory>
+      </whitelist>
     </filter>
 
 </phpunit>
